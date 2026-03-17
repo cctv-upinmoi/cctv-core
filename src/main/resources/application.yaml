@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /cctv-core
+
+spring:
+  application:
+    name: cctv-core
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri:
+
+idp:
+  url: http://localhost:8180
+  client-id:
+  client-secret:
