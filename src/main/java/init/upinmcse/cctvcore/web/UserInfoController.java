@@ -1,0 +1,44 @@
+package init.upinmcse.cctvcore.web;
+
+import init.upinmcse.cctvcore.dto.common.ApiResponse;
+import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
+import init.upinmcse.cctvcore.dto.response.UserInfoResponse;
+import init.upinmcse.cctvcore.service.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class UserInfoController {
+    IUserService userService;
+
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "",
+                    content = @Content(mediaType = "application/xml")),
+            @ApiResponse(responseCode = "400", description = ""),
+            @ApiResponse(responseCode = "403", description = ""),
+            @ApiResponse(responseCode = "404", description = ""),
+            @ApiResponse(responseCode = "500", description = "")
+    })
+    @PostMapping("/register")
+    ApiResponse<UserInfoResponse> register(@RequestBody @Valid RegistrationRequest request) {
+        return ApiResponse.<UserInfoResponse>builder()
+                .data(userService.register(request))
+                .build();
+    }
+}
