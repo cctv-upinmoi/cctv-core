@@ -14,11 +14,17 @@ import feign.QueryMap;
 
 @FeignClient(name = "identity-client", url = "${idp.url}")
 public interface IdentityClient {
+    /*
+    * Exchange token from IDP
+    * */
     @PostMapping(
-            value = "/realms/.../protocol/openid-connect/token",
+            value = "/realms/${idp.realm}/protocol/openid-connect/token",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     TokenExchangeResponse exchangeToken(@QueryMap TokenExchangeParam param);
 
-    @PostMapping(value = "/admin/realms/.../users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    /*
+    * Create User
+    * */
+    @PostMapping(value = "/admin/realms/${idp.realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createUser(@RequestHeader("authorization") String token, @RequestBody UserCreationParam param);
 }

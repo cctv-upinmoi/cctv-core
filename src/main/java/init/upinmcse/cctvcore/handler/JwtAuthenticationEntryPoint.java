@@ -1,7 +1,7 @@
 package init.upinmcse.cctvcore.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import init.upinmcse.cctvcore.dto.common.ApiResponse;
+import init.upinmcse.cctvcore.common.AppResponse;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(ApiResponse.error(appErrorCode)));
+        response.getWriter().write(objectMapper.writeValueAsString(AppResponse.error(appErrorCode)));
         response.flushBuffer();
     }
 }

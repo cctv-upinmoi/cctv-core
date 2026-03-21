@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.dto.common;
+package init.upinmcse.cctvcore.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -16,39 +16,39 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
+public class AppResponse<T> {
     @Builder.Default
     private int code = 1000;
 
     private String message;
     private T data;
 
-    public static <T> ApiResponse<T> success(String message){
-        return ApiResponse.<T>builder()
+    public static <T> AppResponse<T> success(String message){
+        return AppResponse.<T>builder()
                 .code(1000)
                 .message(message)
                 .data(null)
                 .build();
     }
 
-    public static <T> ApiResponse<T> success(T data){
-        return ApiResponse.<T>builder()
+    public static <T> AppResponse<T> success(T data){
+        return AppResponse.<T>builder()
                 .code(1000)
                 .message("Default message")
                 .data(data)
                 .build();
     }
 
-    public static <T> ApiResponse<T> success(String msg, T data){
-        return ApiResponse.<T>builder()
+    public static <T> AppResponse<T> success(String msg, T data){
+        return AppResponse.<T>builder()
                 .code(1000)
                 .message(msg)
                 .data(data)
                 .build();
     }
 
-    public static <T> ApiResponse<T> error(ErrorCode errorCode){
-        return ApiResponse.<T>builder()
+    public static <T> AppResponse<T> error(ErrorCode errorCode){
+        return AppResponse.<T>builder()
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .data(null)

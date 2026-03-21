@@ -5,8 +5,12 @@ import init.upinmcse.cctvcore.dto.identity.Credential;
 import init.upinmcse.cctvcore.dto.identity.TokenExchangeParam;
 import init.upinmcse.cctvcore.dto.identity.UserCreationParam;
 import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
-import init.upinmcse.cctvcore.dto.response.UserInfoResponse;
+import init.upinmcse.cctvcore.dto.response.CCTVUserInfoResponse;
+import init.upinmcse.cctvcore.exception.AppException;
+import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.exception.ErrorNormalizer;
+import init.upinmcse.cctvcore.mapper.CCTVUserInfoMapper;
+import init.upinmcse.cctvcore.model.CCTVUserInfo;
 import init.upinmcse.cctvcore.repository.CCTVUserInfoRepository;
 import init.upinmcse.cctvcore.repository.client.IdentityClient;
 import init.upinmcse.cctvcore.service.IUserService;
@@ -14,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +31,7 @@ public class UserInfoService implements IUserService {
     private final IdentityClient identityClient;
     private final ErrorNormalizer errorNormalizer;
     private final CCTVUserInfoRepository userInfoRepository;
+    private final CCTVUserInfoMapper userInfoMapper;
 
     @Value("${idp.client-id}")
     private String clientId;
@@ -34,7 +40,17 @@ public class UserInfoService implements IUserService {
     private String clientSecret;
 
     @Override
-    public UserInfoResponse register(RegistrationRequest request) {
+    public CCTVUserInfoResponse getProfile() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+
+        CCTVUserInfo userInfo = userInfoRepository.findByUserId(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return userInfoMapper.toCCTVUserInfoResponse(userInfo);
+    }
+
+    @Override
+    public CCTVUserInfoResponse register(RegistrationRequest request) {
         try {
             // Create account in KeyCloak
             // Exchange client Token
@@ -52,9 +68,9 @@ public class UserInfoService implements IUserService {
             var creationResponse = identityClient.createUser(
                     "Bearer " + token.getAccessToken(),
                     UserCreationParam.builder()
-//                            .username(request.getUsername())
-//                            .firstName(request.getFirstName())
-//                            .lastName(request.getLastName())
+                            .username(request.getEmail())
+                            .firstName("")
+                            .lastName("")
                             .email(request.getEmail())
                             .enabled(true)
                             .emailVerified(false)
@@ -64,15 +80,20 @@ public class UserInfoService implements IUserService {
                                     .value(request.getPassword())
                                     .build()))
                             .build());
+
             String userId = extractUserId(creationResponse);
             log.info("UserId {}", userId);
 
             // save to db
+            CCTVUserInfo userInfo = userInfoMapper.toCCTVUserInfo(request);
+            userInfo.setUserId(userId);
 
+            userInfo = userInfoRepository.save(userInfo);
+
+            return userInfoMapper.toCCTVUserInfoResponse(userInfo);
         } catch (FeignException exception) {
             throw errorNormalizer.handleKeyCloakException(exception);
         }
-        return null;
     }
 
     private String extractUserId(ResponseEntity<?> response) {

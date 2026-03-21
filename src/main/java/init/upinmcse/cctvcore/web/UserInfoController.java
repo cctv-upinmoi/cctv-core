@@ -1,11 +1,12 @@
 package init.upinmcse.cctvcore.web;
 
-import init.upinmcse.cctvcore.dto.common.ApiResponse;
+import init.upinmcse.cctvcore.common.AppResponse;
 import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
-import init.upinmcse.cctvcore.dto.response.UserInfoResponse;
+import init.upinmcse.cctvcore.dto.response.CCTVUserInfoResponse;
 import init.upinmcse.cctvcore.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -36,8 +37,8 @@ public class UserInfoController {
             @ApiResponse(responseCode = "500", description = "")
     })
     @PostMapping("/register")
-    ApiResponse<UserInfoResponse> register(@RequestBody @Valid RegistrationRequest request) {
-        return ApiResponse.<UserInfoResponse>builder()
+    AppResponse<CCTVUserInfoResponse> register(@RequestBody @Valid RegistrationRequest request) {
+        return AppResponse.<CCTVUserInfoResponse>builder()
                 .data(userService.register(request))
                 .build();
     }

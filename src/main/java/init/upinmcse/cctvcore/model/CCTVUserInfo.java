@@ -1,38 +1,19 @@
 package init.upinmcse.cctvcore.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.jspecify.annotations.Nullable;
-import org.springframework.data.domain.Persistable;
 
-@Data
+import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table
-public class CCTVUserInfo extends BaseEntity implements Persistable<String> {
-    @Id
+@Document(collation = "cctv-user-info")
+public class CCTVUserInfo extends BaseEntity {
+    @MongoId
+    String profileId;
     String userId;
-
-    @Transient
-    @Builder.Default
-    private boolean isNew = true;
-
-    @Override
-    public @Nullable String getId() {
-        return userId;
-    }
-
-    @Override
-    public boolean isNew() {
-        return isNew;
-    }
-
-    @PostLoad
-    @PostPersist
-    void markNotNew() { this.isNew = false; }
+    String email;
 }

@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserInfoResponse {
+public class CCTVUserInfoResponse {
     String userId;
+    String profileId;
+    String email;
 }

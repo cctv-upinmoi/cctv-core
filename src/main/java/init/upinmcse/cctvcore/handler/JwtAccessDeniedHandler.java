@@ -1,6 +1,6 @@
 package init.upinmcse.cctvcore.handler;
 
-import init.upinmcse.cctvcore.dto.common.ApiResponse;
+import init.upinmcse.cctvcore.common.AppResponse;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(ApiResponse.error(appErrorCode)));
+        response.getWriter().write(objectMapper.writeValueAsString(AppResponse.error(appErrorCode)));
         response.flushBuffer();
     }
 }
