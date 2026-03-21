@@ -13,6 +13,8 @@ import lombok.experimental.FieldDefaults;
 public class RegistrationRequest {
     @Email(message = "")
     String email;
+    String firstName;
+    String lastName;
     @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
 }

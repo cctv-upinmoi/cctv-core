@@ -44,6 +44,8 @@ public class UserInfoService implements IUserService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
 
+        log.info("userId {}",userId);
+
         CCTVUserInfo userInfo = userInfoRepository.findByUserId(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return userInfoMapper.toCCTVUserInfoResponse(userInfo);
@@ -69,8 +71,8 @@ public class UserInfoService implements IUserService {
                     "Bearer " + token.getAccessToken(),
                     UserCreationParam.builder()
                             .username(request.getEmail())
-                            .firstName("")
-                            .lastName("")
+                            .firstName(request.getFirstName())
+                            .lastName(request.getLastName())
                             .email(request.getEmail())
                             .enabled(true)
                             .emailVerified(false)

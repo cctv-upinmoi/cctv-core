@@ -12,4 +12,6 @@ public class CCTVUserInfoResponse {
     String userId;
     String profileId;
     String email;
+    String firstName;
+    String lastName;
 }

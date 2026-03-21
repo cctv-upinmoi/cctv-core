@@ -13,12 +13,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/users")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserInfoController {
@@ -40,6 +39,24 @@ public class UserInfoController {
     AppResponse<CCTVUserInfoResponse> register(@RequestBody @Valid RegistrationRequest request) {
         return AppResponse.<CCTVUserInfoResponse>builder()
                 .data(userService.register(request))
+                .build();
+    }
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "",
+                    content = @Content(mediaType = "application/xml")),
+            @ApiResponse(responseCode = "400", description = ""),
+            @ApiResponse(responseCode = "403", description = ""),
+            @ApiResponse(responseCode = "404", description = ""),
+            @ApiResponse(responseCode = "500", description = "")
+    })
+    @GetMapping
+    AppResponse<CCTVUserInfoResponse> getProfile(){
+        return AppResponse.<CCTVUserInfoResponse>builder()
+                .data(userService.getProfile())
                 .build();
     }
 }
