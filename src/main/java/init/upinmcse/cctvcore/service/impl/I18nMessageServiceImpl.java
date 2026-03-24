@@ -24,11 +24,10 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             log.warn("Missing i18n message key: '{}' for locale: {}", key, resolvedLocale);
             return key;
         }
-
     }
 
     /**
-     * Resolve locale to a supported one, falling back to German (default) if unsupported.
+     * Resolve locale to a supported one, falling back to Vietnamese (default) if unsupported.
      */
     private Locale resolveLocale(Locale locale) {
         return LanguageType.fromLocale(locale).getLocale();

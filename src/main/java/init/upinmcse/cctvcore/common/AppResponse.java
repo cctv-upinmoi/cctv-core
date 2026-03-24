@@ -34,7 +34,6 @@ public class AppResponse<T> {
     public static <T> AppResponse<T> success(T data){
         return AppResponse.<T>builder()
                 .code(1000)
-                .message("Default message")
                 .data(data)
                 .build();
     }
@@ -47,10 +46,10 @@ public class AppResponse<T> {
                 .build();
     }
 
-    public static <T> AppResponse<T> error(ErrorCode errorCode){
+    public static <T> AppResponse<T> error(ErrorCode errorCode, String message){
         return AppResponse.<T>builder()
                 .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .message(message)
                 .data(null)
                 .build();
     }

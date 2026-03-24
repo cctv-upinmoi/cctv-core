@@ -3,7 +3,7 @@ package init.upinmcse.cctvcore.exception;
 public class AppException extends RuntimeException {
 
     public AppException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode.getMessageKey());
         this.errorCode = errorCode;
     }
 
