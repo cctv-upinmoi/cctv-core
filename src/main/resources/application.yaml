@@ -11,9 +11,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri:
+          issuer-uri: http://localhost:8180/realms/cctv
+  data:
+    mongodb:
+      uri:
 
 idp:
+  realm: cctv
   url: http://localhost:8180
   client-id:
   client-secret:

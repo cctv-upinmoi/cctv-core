@@ -3,9 +3,12 @@ package init.upinmcse.cctvcore.configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.*;
+
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasAnyAuthority(T(io.upinmcse.shopnoteserver.shop.model.Roles).CONFIGURATOR.role, " +
-        "T(io.upinmcse.shopnoteserver.shop.model.Roles).ADMIN.role)")
+@PreAuthorize("hasAnyAuthority(" +
+        "T(init.upinmcse.cctvcore.model.Roles).ROLE_CONFIGURATOR.getRole(), " +
+        "T(init.upinmcse.cctvcore.model.Roles).ROLE_ADMIN.getRole())")
 public @interface ConfiguratorAccess {}
+

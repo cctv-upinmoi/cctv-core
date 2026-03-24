@@ -1,6 +1,7 @@
 package init.upinmcse.cctvcore.web;
 
 import init.upinmcse.cctvcore.common.AppResponse;
+import init.upinmcse.cctvcore.configuration.ConfiguratorAccess;
 import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
 import init.upinmcse.cctvcore.dto.response.CCTVUserInfoResponse;
 import init.upinmcse.cctvcore.service.IUserService;
@@ -35,6 +36,7 @@ public class UserInfoController {
             @ApiResponse(responseCode = "404", description = ""),
             @ApiResponse(responseCode = "500", description = "")
     })
+    @ConfiguratorAccess
     @PostMapping("/register")
     AppResponse<CCTVUserInfoResponse> register(@RequestBody @Valid RegistrationRequest request) {
         return AppResponse.<CCTVUserInfoResponse>builder()

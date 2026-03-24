@@ -17,7 +17,7 @@ public class I18nConfig {
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource =
                 new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:i18n/messages");
+        messageSource.setBasenames("classpath:i18n/message");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setDefaultLocale(LanguageType.VN.getLocale());
         return messageSource;
