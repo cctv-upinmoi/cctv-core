@@ -1,0 +1,23 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /cctv-core
+
+spring:
+  application:
+    name: cctv-core
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/cctv
+  data:
+    mongodb:
+      uri:
+
+idp:
+  realm: cctv
+  url: http://localhost:8180
+  client-id:
+  client-secret:
