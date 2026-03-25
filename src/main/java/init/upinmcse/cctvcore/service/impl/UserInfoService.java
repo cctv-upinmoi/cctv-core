@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class UserInfoService implements IUserService {
     private final ErrorNormalizer errorNormalizer;
     private final CCTVUserInfoRepository userInfoRepository;
     private final CCTVUserInfoMapper userInfoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${idp.client-id}")
     private String clientId;
