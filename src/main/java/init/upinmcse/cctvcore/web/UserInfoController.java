@@ -30,7 +30,7 @@ public class UserInfoController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "",
-                    content = @Content(mediaType = "application/xml")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = ""),
             @ApiResponse(responseCode = "403", description = ""),
             @ApiResponse(responseCode = "404", description = ""),
@@ -43,13 +43,14 @@ public class UserInfoController {
                 .data(userService.register(request))
                 .build();
     }
+
     @Operation(
             summary = "",
             description = ""
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "",
-                    content = @Content(mediaType = "application/xml")),
+                    content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = ""),
             @ApiResponse(responseCode = "403", description = ""),
             @ApiResponse(responseCode = "404", description = ""),
