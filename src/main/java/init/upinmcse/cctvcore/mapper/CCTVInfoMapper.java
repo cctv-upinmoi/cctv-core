@@ -12,16 +12,14 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 @Mapper(componentModel = "spring", 
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface CameraMapper {
+public interface CCTVInfoMapper {
 
-    // ===== TO ENTITY =====
     @Mapping(target = "location", source = ".", qualifiedByName = "toGeoJsonPoint")
     CCTVCameraInfo toEntity(AddCCTVReq request);
 
     @Mapping(target = "location", source = ".", qualifiedByName = "toGeoJsonPoint")
     void updateEntity(@MappingTarget CCTVCameraInfo entity, UpdateCCTVReq request);
 
-    // ===== TO DTO =====
     @Mapping(target = "longitude", source = "location", qualifiedByName = "toLongitude")
     @Mapping(target = "latitude", source = "location", qualifiedByName = "toLatitude")
     @Mapping(target = "status", expression = "java(entity.getStatus() != null ? entity.getStatus().name() : null)")

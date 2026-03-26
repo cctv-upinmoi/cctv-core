@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.repository.client;
+package init.upinmcse.cctvcore.client;
 
 import init.upinmcse.cctvcore.dto.identity.TokenExchangeParam;
 import init.upinmcse.cctvcore.dto.identity.TokenExchangeResponse;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import feign.QueryMap;
 
 @FeignClient(name = "identity-client", url = "${idp.url}")
-public interface IdentityClient {
+public interface IdpClient {
     /*
     * Exchange token from IDP
     * */

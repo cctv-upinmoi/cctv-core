@@ -12,7 +12,7 @@ import init.upinmcse.cctvcore.exception.ErrorNormalizer;
 import init.upinmcse.cctvcore.mapper.CCTVUserInfoMapper;
 import init.upinmcse.cctvcore.model.CCTVUserInfo;
 import init.upinmcse.cctvcore.repository.CCTVUserInfoRepository;
-import init.upinmcse.cctvcore.repository.client.IdentityClient;
+import init.upinmcse.cctvcore.client.IdpClient;
 import init.upinmcse.cctvcore.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class UserInfoService implements IUserService {
-    private final IdentityClient identityClient;
+    private final IdpClient idpClient;
     private final ErrorNormalizer errorNormalizer;
     private final CCTVUserInfoRepository userInfoRepository;
     private final CCTVUserInfoMapper userInfoMapper;
@@ -58,7 +58,7 @@ public class UserInfoService implements IUserService {
         try {
             // Create account in KeyCloak
             // Exchange client Token
-            var token = identityClient.exchangeToken(TokenExchangeParam.builder()
+            var token = idpClient.exchangeToken(TokenExchangeParam.builder()
                     .grant_type("client_credentials")
                     .client_id(clientId)
                     .client_secret(clientSecret)
@@ -69,7 +69,7 @@ public class UserInfoService implements IUserService {
 
             // Create user with client Token and given info
             // Get userId of keyCloak account
-            var creationResponse = identityClient.createUser(
+            var creationResponse = idpClient.createUser(
                     "Bearer " + token.getAccessToken(),
                     UserCreationParam.builder()
                             .username(request.getEmail())

@@ -6,7 +6,7 @@ import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.exception.AppException;
 import init.upinmcse.cctvcore.exception.ErrorCode;
-import init.upinmcse.cctvcore.mapper.CameraMapper;
+import init.upinmcse.cctvcore.mapper.CCTVInfoMapper;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
 import init.upinmcse.cctvcore.model.CCTVStatus;
 import init.upinmcse.cctvcore.repository.CCTVCameraInfoRepository;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CCTVService implements ICCTVService {
     private final CCTVCameraInfoRepository cameraInfoRepository;
-    private final CameraMapper cameraMapper;
+    private final CCTVInfoMapper CCTVInfoMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -34,13 +34,13 @@ public class CCTVService implements ICCTVService {
 
     @Override
     public CCTVRes addCCTVCameraInfo(AddCCTVReq request) {
-        CCTVCameraInfo camera = cameraMapper.toEntity(request);
+        CCTVCameraInfo camera = CCTVInfoMapper.toEntity(request);
         camera.setStatus(CCTVStatus.OK);
         
         // Auto-generate indexId if you need it sequence-based, or leave null to handle later.
         
         CCTVCameraInfo saved = cameraInfoRepository.save(camera);
-        return cameraMapper.toResponse(saved);
+        return CCTVInfoMapper.toResponse(saved);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CCTVService implements ICCTVService {
         CCTVCameraInfo camera = cameraInfoRepository.findById(request.getCameraId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)); // need add CAMERA_NOT_FOUND exception
 
-        cameraMapper.updateEntity(camera, request);
+        CCTVInfoMapper.updateEntity(camera, request);
         
         if (request.getStatus() != null) {
             try {
@@ -60,14 +60,14 @@ public class CCTVService implements ICCTVService {
 
         camera.setPwd(passwordEncoder.encode(request.getPwd()));
         CCTVCameraInfo updated = cameraInfoRepository.save(camera);
-        return cameraMapper.toResponse(updated);
+        return CCTVInfoMapper.toResponse(updated);
     }
 
     @Override
     public CCTVRes getCCTVCameraInfoById(String id) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        return cameraMapper.toResponse(camera);
+        return CCTVInfoMapper.toResponse(camera);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CCTVService implements ICCTVService {
     public List<CCTVRes> getAllCameras() {
         return cameraInfoRepository.findAll()
                 .stream()
-                .map(cameraMapper::toResponse)
+                .map(CCTVInfoMapper::toResponse)
                 .collect(Collectors.toList());
     }
 }
