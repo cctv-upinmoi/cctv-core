@@ -1,15 +1,16 @@
 package init.upinmcse.cctvcore.service.impl;
 
-import init.upinmcse.cctvcore.dto.request.AddCameraRequest;
-import init.upinmcse.cctvcore.dto.request.UpdateCameraRequest;
-import init.upinmcse.cctvcore.dto.response.CameraResponse;
+import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
+import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
+import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
+import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.exception.AppException;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.mapper.CameraMapper;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
 import init.upinmcse.cctvcore.model.CCTVStatus;
 import init.upinmcse.cctvcore.repository.CCTVCameraInfoRepository;
-import init.upinmcse.cctvcore.service.ICameraService;
+import init.upinmcse.cctvcore.service.ICCTVService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,13 +22,18 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CameraService implements ICameraService {
+public class CCTVService implements ICCTVService {
     private final CCTVCameraInfoRepository cameraInfoRepository;
     private final CameraMapper cameraMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public CameraResponse addCCTVCameraInfo(AddCameraRequest request) {
+    public CCTVRes updateCCTVZone(UpdateCCTVZoneReq updateCCTVZoneReq) {
+        return null;
+    }
+
+    @Override
+    public CCTVRes addCCTVCameraInfo(AddCCTVReq request) {
         CCTVCameraInfo camera = cameraMapper.toEntity(request);
         camera.setStatus(CCTVStatus.OK);
         
@@ -38,7 +44,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public CameraResponse updateCCTVCameraInfo(UpdateCameraRequest request) {
+    public CCTVRes updateCCTVCameraInfo(UpdateCCTVReq request) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(request.getCameraId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)); // need add CAMERA_NOT_FOUND exception
 
@@ -58,7 +64,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public CameraResponse getCCTVCameraInfoById(String id) {
+    public CCTVRes getCCTVCameraInfoById(String id) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return cameraMapper.toResponse(camera);
@@ -73,7 +79,7 @@ public class CameraService implements ICameraService {
     }
 
     @Override
-    public List<CameraResponse> getAllCameras() {
+    public List<CCTVRes> getAllCameras() {
         return cameraInfoRepository.findAll()
                 .stream()
                 .map(cameraMapper::toResponse)

@@ -1,9 +1,9 @@
 package init.upinmcse.cctvcore.mapper;
 
-import init.upinmcse.cctvcore.dto.request.AddCameraRequest;
-import init.upinmcse.cctvcore.dto.request.UpdateCameraRequest;
-import init.upinmcse.cctvcore.dto.response.CameraResponse;
-import init.upinmcse.cctvcore.dto.response.LocationDetailResponse;
+import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
+import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
+import init.upinmcse.cctvcore.dto.response.CCTVRes;
+import init.upinmcse.cctvcore.dto.response.LocationDetailRes;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
 import init.upinmcse.cctvcore.model.LocationDetail;
 import org.mapstruct.*;
@@ -16,19 +16,19 @@ public interface CameraMapper {
 
     // ===== TO ENTITY =====
     @Mapping(target = "location", source = ".", qualifiedByName = "toGeoJsonPoint")
-    CCTVCameraInfo toEntity(AddCameraRequest request);
+    CCTVCameraInfo toEntity(AddCCTVReq request);
 
     @Mapping(target = "location", source = ".", qualifiedByName = "toGeoJsonPoint")
-    void updateEntity(@MappingTarget CCTVCameraInfo entity, UpdateCameraRequest request);
+    void updateEntity(@MappingTarget CCTVCameraInfo entity, UpdateCCTVReq request);
 
     // ===== TO DTO =====
     @Mapping(target = "longitude", source = "location", qualifiedByName = "toLongitude")
     @Mapping(target = "latitude", source = "location", qualifiedByName = "toLatitude")
     @Mapping(target = "status", expression = "java(entity.getStatus() != null ? entity.getStatus().name() : null)")
     @Mapping(target = "mode", expression = "java(entity.getMode() != null ? entity.getMode().name() : null)")
-    CameraResponse toResponse(CCTVCameraInfo entity);
+    CCTVRes toResponse(CCTVCameraInfo entity);
 
-    LocationDetailResponse toLocationResponse(LocationDetail detail);
+    LocationDetailRes toLocationResponse(LocationDetail detail);
 
     // ===== CUSTOM MAPPERS FOR GEOJSON =====
     @Named("toGeoJsonPoint")
@@ -36,10 +36,10 @@ public interface CameraMapper {
         Double lon = null;
         Double lat = null;
         
-        if (request instanceof AddCameraRequest req) {
+        if (request instanceof AddCCTVReq req) {
             lon = req.getLongitude();
             lat = req.getLatitude();
-        } else if (request instanceof UpdateCameraRequest req) {
+        } else if (request instanceof UpdateCCTVReq req) {
             lon = req.getLongitude();
             lat = req.getLatitude();
         }

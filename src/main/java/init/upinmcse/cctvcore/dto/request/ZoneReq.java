@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ZoneRequest {
+public class ZoneReq {
 
     @NotBlank(message = "ZONE_NAME_REQUIRED")
     String name;

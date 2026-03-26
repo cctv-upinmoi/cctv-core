@@ -1,5 +1,6 @@
-package init.upinmcse.cctvcore.dto.response;
+package init.upinmcse.cctvcore.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,10 +9,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LocationDetailResponse {
+public class LocationDetailReq {
+    @NotBlank(message = "ADDRESS_REQUIRED")
     String address;
     String ward;
     String district;
+    @NotBlank(message = "PROVINCE_REQUIRED")
     String province;
     String description;
 }

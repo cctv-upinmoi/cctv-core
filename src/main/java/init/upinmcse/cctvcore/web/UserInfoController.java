@@ -2,8 +2,8 @@ package init.upinmcse.cctvcore.web;
 
 import init.upinmcse.cctvcore.common.AppResponse;
 import init.upinmcse.cctvcore.configuration.ConfiguratorAccess;
-import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
-import init.upinmcse.cctvcore.dto.response.CCTVUserInfoResponse;
+import init.upinmcse.cctvcore.dto.request.RegistrationReq;
+import init.upinmcse.cctvcore.dto.response.CCTVUserInfoRes;
 import init.upinmcse.cctvcore.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,8 +38,8 @@ public class UserInfoController {
     })
     @ConfiguratorAccess
     @PostMapping("/register")
-    AppResponse<CCTVUserInfoResponse> register(@RequestBody @Valid RegistrationRequest request) {
-        return AppResponse.<CCTVUserInfoResponse>builder()
+    AppResponse<CCTVUserInfoRes> register(@RequestBody @Valid RegistrationReq request) {
+        return AppResponse.<CCTVUserInfoRes>builder()
                 .data(userService.register(request))
                 .build();
     }
@@ -57,8 +57,8 @@ public class UserInfoController {
             @ApiResponse(responseCode = "500", description = "")
     })
     @GetMapping
-    AppResponse<CCTVUserInfoResponse> getProfile(){
-        return AppResponse.<CCTVUserInfoResponse>builder()
+    AppResponse<CCTVUserInfoRes> getProfile(){
+        return AppResponse.<CCTVUserInfoRes>builder()
                 .data(userService.getProfile())
                 .build();
     }

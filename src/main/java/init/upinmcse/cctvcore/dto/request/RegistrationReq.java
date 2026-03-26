@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegistrationRequest {
+public class RegistrationReq {
     @Email(message = "")
     String email;
     String firstName;

@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateCameraRequest {
+public class UpdateCCTVReq {
     String cameraId;
     String name;
     String ip;
@@ -24,8 +24,8 @@ public class UpdateCameraRequest {
     Double latitude;
 
     @Valid
-    LocationDetailRequest locationDetail;
+    LocationDetailReq locationDetail;
 
     @Valid
-    List<ZoneRequest> zones;
+    List<ZoneReq> zones;
 }

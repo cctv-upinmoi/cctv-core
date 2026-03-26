@@ -4,8 +4,8 @@ import feign.FeignException;
 import init.upinmcse.cctvcore.dto.identity.Credential;
 import init.upinmcse.cctvcore.dto.identity.TokenExchangeParam;
 import init.upinmcse.cctvcore.dto.identity.UserCreationParam;
-import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
-import init.upinmcse.cctvcore.dto.response.CCTVUserInfoResponse;
+import init.upinmcse.cctvcore.dto.request.RegistrationReq;
+import init.upinmcse.cctvcore.dto.response.CCTVUserInfoRes;
 import init.upinmcse.cctvcore.exception.AppException;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.exception.ErrorNormalizer;
@@ -42,7 +42,7 @@ public class UserInfoService implements IUserService {
     private String clientSecret;
 
     @Override
-    public CCTVUserInfoResponse getProfile() {
+    public CCTVUserInfoRes getProfile() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
 
@@ -54,7 +54,7 @@ public class UserInfoService implements IUserService {
     }
 
     @Override
-    public CCTVUserInfoResponse register(RegistrationRequest request) {
+    public CCTVUserInfoRes register(RegistrationReq request) {
         try {
             // Create account in KeyCloak
             // Exchange client Token

@@ -11,8 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CameraResponse {
-
+public class CCTVRes {
     String id;
     Long indexId;
     String name;
@@ -24,8 +23,8 @@ public class CameraResponse {
     String rtspStreamUrl;
     Double longitude;
     Double latitude;
-    LocationDetailResponse locationDetail;
-    List<ZoneResponse> zones;
+    LocationDetailRes locationDetail;
+    List<ZoneRes> zones;
     Date createdAt;
     Date updatedAt;
 }

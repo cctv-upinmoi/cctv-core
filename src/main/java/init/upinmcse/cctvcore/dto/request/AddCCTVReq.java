@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddCameraRequest {
+public class AddCCTVReq {
 
     @NotBlank(message = "CAMERA_NAME_REQUIRED")
     String name;
@@ -37,8 +37,8 @@ public class AddCameraRequest {
     Double latitude;
 
     @Valid
-    LocationDetailRequest locationDetail;
+    LocationDetailReq locationDetail;
 
     @Valid
-    List<ZoneRequest> zones;
+    List<ZoneReq> zones;
 }

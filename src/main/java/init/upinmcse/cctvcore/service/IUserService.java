@@ -1,9 +1,9 @@
 package init.upinmcse.cctvcore.service;
 
-import init.upinmcse.cctvcore.dto.request.RegistrationRequest;
-import init.upinmcse.cctvcore.dto.response.CCTVUserInfoResponse;
+import init.upinmcse.cctvcore.dto.request.RegistrationReq;
+import init.upinmcse.cctvcore.dto.response.CCTVUserInfoRes;
 
 public interface IUserService {
-    CCTVUserInfoResponse register(RegistrationRequest request);
-    CCTVUserInfoResponse getProfile();
+    CCTVUserInfoRes register(RegistrationReq request);
+    CCTVUserInfoRes getProfile();
 }

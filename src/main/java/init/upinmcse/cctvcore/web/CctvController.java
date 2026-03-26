@@ -3,10 +3,11 @@ package init.upinmcse.cctvcore.web;
 import init.upinmcse.cctvcore.common.AppResponse;
 import init.upinmcse.cctvcore.configuration.AdminAccess;
 import init.upinmcse.cctvcore.configuration.ConfiguratorAccess;
-import init.upinmcse.cctvcore.dto.request.AddCameraRequest;
-import init.upinmcse.cctvcore.dto.request.UpdateCameraRequest;
-import init.upinmcse.cctvcore.dto.response.CameraResponse;
-import init.upinmcse.cctvcore.service.ICameraService;
+import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
+import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
+import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
+import init.upinmcse.cctvcore.dto.response.CCTVRes;
+import init.upinmcse.cctvcore.service.ICCTVService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequestMapping("/cameras")
 @RequiredArgsConstructor
 public class CctvController {
-    private final ICameraService cameraService;
+    private final ICCTVService cctvService;
 
     @Operation(summary = "Get all cameras", description = "Return list of all cameras for AI service")
     @ApiResponses(value = {
@@ -30,16 +31,16 @@ public class CctvController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping
-    public AppResponse<List<CameraResponse>> getAllCameras() {
-        return AppResponse.<List<CameraResponse>>builder()
-                .data(cameraService.getAllCameras())
+    public AppResponse<List<CCTVRes>> getAllCameras() {
+        return AppResponse.<List<CCTVRes>>builder()
+                .data(cctvService.getAllCameras())
                 .build();
     }
 
     @GetMapping("/{id}")
-    public AppResponse<CameraResponse> getCCTVInfo(@PathVariable String id) {
-        return AppResponse.<CameraResponse>builder()
-                .data(cameraService.getCCTVCameraInfoById(id))
+    public AppResponse<CCTVRes> getCCTVInfo(@PathVariable String id) {
+        return AppResponse.<CCTVRes>builder()
+                .data(cctvService.getCCTVCameraInfoById(id))
                 .build();
     }
 
@@ -57,9 +58,9 @@ public class CctvController {
     })
     @ConfiguratorAccess
     @PostMapping
-    public AppResponse<CameraResponse> addCCTV(@Valid @RequestBody AddCameraRequest cameraInfo) {
-        return AppResponse.<CameraResponse>builder()
-                .data(cameraService.addCCTVCameraInfo(cameraInfo))
+    public AppResponse<CCTVRes> addCCTV(@Valid @RequestBody AddCCTVReq cameraInfo) {
+        return AppResponse.<CCTVRes>builder()
+                .data(cctvService.addCCTVCameraInfo(cameraInfo))
                 .build();
     }
 
@@ -85,9 +86,29 @@ public class CctvController {
 
     @ConfiguratorAccess
     @PatchMapping
-    public AppResponse<CameraResponse> updateCCTV(@Valid @RequestBody UpdateCameraRequest updateCameraInfo) {
-        return AppResponse.<CameraResponse>builder()
-                .data(cameraService.updateCCTVCameraInfo(updateCameraInfo))
+    public AppResponse<CCTVRes> updateCCTV(@Valid @RequestBody UpdateCCTVReq updateCameraInfo) {
+        return AppResponse.<CCTVRes>builder()
+                .data(cctvService.updateCCTVCameraInfo(updateCameraInfo))
+                .build();
+    }
+
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = ""),
+            @ApiResponse(responseCode = "403", description = ""),
+            @ApiResponse(responseCode = "404", description = ""),
+            @ApiResponse(responseCode = "500", description = "")
+    })
+    @AdminAccess
+    @PatchMapping("/update-zone")
+    public AppResponse<CCTVRes> updateCCTVZone(@Valid @RequestBody UpdateCCTVZoneReq updateCCTVZoneReq){
+        return AppResponse.<CCTVRes>builder()
+                .data(cctvService.updateCCTVZone(updateCCTVZoneReq))
                 .build();
     }
 }

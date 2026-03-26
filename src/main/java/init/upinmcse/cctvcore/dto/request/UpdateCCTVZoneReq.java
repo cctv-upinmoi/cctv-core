@@ -1,7 +1,9 @@
-package init.upinmcse.cctvcore.dto.response;
+package init.upinmcse.cctvcore.dto.request;
 
+import jakarta.validation.Valid;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.util.List;
 
 @Data
@@ -9,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ZoneResponse {
-    String name;
-    String type;
-    boolean enabled;
-    List<double[]> points;
+public class UpdateCCTVZoneReq {
+    String cameraId;
+
+    @Valid
+    List<ZoneReq> zones;
 }
