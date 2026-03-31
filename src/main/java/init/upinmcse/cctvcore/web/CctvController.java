@@ -1,8 +1,8 @@
 package init.upinmcse.cctvcore.web;
 
 import init.upinmcse.cctvcore.common.AppResponse;
-import init.upinmcse.cctvcore.configuration.AdminAccess;
-import init.upinmcse.cctvcore.configuration.ConfiguratorAccess;
+import init.upinmcse.cctvcore.config.AdminAccess;
+import init.upinmcse.cctvcore.config.ConfiguratorAccess;
 import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class CctvController {
                     content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+    @PermitAll
     @GetMapping
     public AppResponse<List<CCTVRes>> getAllCameras() {
         return AppResponse.<List<CCTVRes>>builder()

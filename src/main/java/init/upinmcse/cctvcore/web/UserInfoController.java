@@ -1,7 +1,7 @@
 package init.upinmcse.cctvcore.web;
 
 import init.upinmcse.cctvcore.common.AppResponse;
-import init.upinmcse.cctvcore.configuration.ConfiguratorAccess;
+import init.upinmcse.cctvcore.config.ConfiguratorAccess;
 import init.upinmcse.cctvcore.dto.request.RegistrationReq;
 import init.upinmcse.cctvcore.dto.response.CCTVUserInfoRes;
 import init.upinmcse.cctvcore.service.IUserService;
