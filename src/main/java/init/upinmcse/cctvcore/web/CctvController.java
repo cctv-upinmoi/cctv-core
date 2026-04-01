@@ -3,12 +3,14 @@ package init.upinmcse.cctvcore.web;
 import init.upinmcse.cctvcore.common.AppResponse;
 import init.upinmcse.cctvcore.config.AdminAccess;
 import init.upinmcse.cctvcore.config.ConfiguratorAccess;
+import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
 import init.upinmcse.cctvcore.service.ICCTVService;
+import init.upinmcse.cctvcore.service.impl.CCTVSSEService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -27,6 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CctvController {
     private final ICCTVService cctvService;
+    private final CCTVSSEService cctvsseService;
 
     @Operation(summary = "Get all cameras", description = "Return list of all cameras for AI service")
     @ApiResponses(value = {
@@ -136,5 +142,30 @@ public class CctvController {
         return AppResponse.<CCTVRes>builder()
                 .data(cctvService.updateCCTVZone(updateCCTVZoneReq))
                 .build();
+    }
+
+    @GetMapping(value = "/status/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamCameraStatus() {
+        SseEmitter emitter = cctvsseService.subscribe();
+
+        // Gửi snapshot ngay khi vừa connect
+        try {
+            List<CCTVStatusEvent.CameraStatus> snapshot = cctvService.getAllCameras()
+                    .stream()
+                    .map(c -> new CCTVStatusEvent.CameraStatus(
+                            c.getId(), c.getName(), c.getStatus(), Instant.now()
+                    ))
+                    .toList();
+
+            emitter.send(
+                    SseEmitter.event()
+                            .name("camera-status")
+                            .data(new CCTVStatusEvent("snapshot", snapshot), MediaType.APPLICATION_JSON)
+            );
+        } catch (IOException e) {
+            emitter.completeWithError(e);
+        }
+
+        return emitter;
     }
 }
