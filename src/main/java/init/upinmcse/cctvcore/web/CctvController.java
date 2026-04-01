@@ -7,6 +7,7 @@ import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
+import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
 import init.upinmcse.cctvcore.service.ICCTVService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +16,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -63,6 +66,27 @@ public class CctvController {
     public AppResponse<CCTVRes> addCCTV(@Valid @RequestBody AddCCTVReq cameraInfo) {
         return AppResponse.<CCTVRes>builder()
                 .data(cctvService.addCCTVCameraInfo(cameraInfo))
+                .build();
+    }
+
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "",
+                    content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = ""),
+            @ApiResponse(responseCode = "403", description = ""),
+            @ApiResponse(responseCode = "404", description = ""),
+            @ApiResponse(responseCode = "500", description = "")
+    })
+    @ConfiguratorAccess
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public AppResponse<ImportCCTVResult> importFromExcel(
+            @RequestParam("file") MultipartFile file) {
+        return AppResponse.<ImportCCTVResult>builder()
+                .data(cctvService.addCCTVfromCSV(file))
                 .build();
     }
 

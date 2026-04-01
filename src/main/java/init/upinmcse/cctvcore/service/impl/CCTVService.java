@@ -4,18 +4,29 @@ import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
+import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
 import init.upinmcse.cctvcore.exception.AppException;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.mapper.CCTVInfoMapper;
+import init.upinmcse.cctvcore.mapper.CSVMapper;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
 import init.upinmcse.cctvcore.model.CCTVStatus;
 import init.upinmcse.cctvcore.repository.CCTVCameraInfoRepository;
 import init.upinmcse.cctvcore.service.ICCTVService;
+import init.upinmcse.cctvcore.service.IStreamService;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +37,8 @@ public class CCTVService implements ICCTVService {
     private final CCTVCameraInfoRepository cameraInfoRepository;
     private final CCTVInfoMapper CCTVInfoMapper;
     private final PasswordEncoder passwordEncoder;
+    private final CSVMapper csvMapper;
+    private final IStreamService streamService;
 
     @Override
     public CCTVRes updateCCTVZone(UpdateCCTVZoneReq updateCCTVZoneReq) {
@@ -37,10 +50,65 @@ public class CCTVService implements ICCTVService {
         CCTVCameraInfo camera = CCTVInfoMapper.toEntity(request);
         camera.setStatus(CCTVStatus.OK);
         
-        // Auto-generate indexId if you need it sequence-based, or leave null to handle later.
-        
         CCTVCameraInfo saved = cameraInfoRepository.save(camera);
+
         return CCTVInfoMapper.toResponse(saved);
+    }
+
+    @Override
+    public ImportCCTVResult addCCTVfromCSV(MultipartFile csv) {
+        List<CCTVRes> imported = new ArrayList<>();
+        List<ImportCCTVResult.RowError> errors = new ArrayList<>();
+        int rowIndex = 1; // row 1 = header, data bắt đầu từ row 2
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(csv.getInputStream(), StandardCharsets.UTF_8))) {
+
+            String headerLine = reader.readLine(); // bỏ qua header
+            if (headerLine == null) {
+                throw new AppException(ErrorCode.INVALID_FILE); // thêm error code này
+            }
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                rowIndex++;
+                String[] cols = line.split(",", -1); // -1 giữ empty string
+
+                try {
+                    AddCCTVReq req = csvMapper.mapToReq(cols, rowIndex, errors);
+                    if (req == null) continue; // có lỗi parsing, đã add vào errors
+
+                    // Validate bằng Bean Validation thủ công
+                    List<ImportCCTVResult.RowError> validationErrors = validate(req, rowIndex);
+                    if (!validationErrors.isEmpty()) {
+                        errors.addAll(validationErrors);
+                        continue;
+                    }
+
+                    CCTVRes res = addCCTVCameraInfo(req);
+                    imported.add(res);
+
+                } catch (Exception e) {
+                    log.error("Error importing row {}: {}", rowIndex, e.getMessage());
+                    errors.add(ImportCCTVResult.RowError.builder()
+                            .row(rowIndex)
+                            .field("unknown")
+                            .message(e.getMessage())
+                            .build());
+                }
+            }
+
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.INVALID_FILE);
+        }
+
+        return ImportCCTVResult.builder()
+                .totalRows(rowIndex - 1)
+                .successCount(imported.size())
+                .failCount(errors.size())
+                .imported(imported)
+                .errors(errors)
+                .build();
     }
 
     @Override
@@ -83,6 +151,17 @@ public class CCTVService implements ICCTVService {
         return cameraInfoRepository.findAll()
                 .stream()
                 .map(CCTVInfoMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    private List<ImportCCTVResult.RowError> validate(Object obj, int row) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        return validator.validate(obj).stream()
+                .map(v -> ImportCCTVResult.RowError.builder()
+                        .row(row)
+                        .field(v.getPropertyPath().toString())
+                        .message(v.getMessage())
+                        .build())
                 .collect(Collectors.toList());
     }
 }

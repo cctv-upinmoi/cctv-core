@@ -38,7 +38,4 @@ public class AddCCTVReq {
 
     @Valid
     LocationDetailReq locationDetail;
-
-    @Valid
-    List<ZoneReq> zones;
 }
