@@ -33,7 +33,7 @@ public class CCTVHealthCheck {
             return;
         }
 
-        List<CCTVStatusEvent.CameraStatus> results = new ArrayList<>();
+        List<CCTVStatusEvent.CCTVStatus> results = new ArrayList<>();
 
         for (CCTVRes camera : cameras) {
             String newStatus;
@@ -51,7 +51,7 @@ public class CCTVHealthCheck {
                 newStatus = "ERROR";
             }
 
-            results.add(new CCTVStatusEvent.CameraStatus(
+            results.add(new CCTVStatusEvent.CCTVStatus(
                     camera.getId(),
                     camera.getName(),
                     newStatus,

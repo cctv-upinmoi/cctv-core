@@ -150,9 +150,9 @@ public class CctvController {
 
         // Gửi snapshot ngay khi vừa connect
         try {
-            List<CCTVStatusEvent.CameraStatus> snapshot = cctvService.getAllCameras()
+            List<CCTVStatusEvent.CCTVStatus> snapshot = cctvService.getAllCameras()
                     .stream()
-                    .map(c -> new CCTVStatusEvent.CameraStatus(
+                    .map(c -> new CCTVStatusEvent.CCTVStatus(
                             c.getId(), c.getName(), c.getStatus(), Instant.now()
                     ))
                     .toList();
