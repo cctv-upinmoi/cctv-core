@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.configuration;
+package init.upinmcse.cctvcore.config;
 
 import java.util.Arrays;
 import java.util.Locale;

@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.configuration;
+package init.upinmcse.cctvcore.config;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

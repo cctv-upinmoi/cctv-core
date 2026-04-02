@@ -17,6 +17,8 @@ public enum ErrorCode {
     USERNAME_IS_MISSING(1010, "error.username-is-missing", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1011, "error.user-not-existed", HttpStatus.BAD_REQUEST),
 
+
+    INVALID_FILE(3000, "error.csv-failed", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String messageKey, HttpStatusCode statusCode) {
