@@ -11,6 +11,7 @@ import init.upinmcse.cctvcore.mapper.CCTVInfoMapper;
 import init.upinmcse.cctvcore.mapper.CSVMapper;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
 import init.upinmcse.cctvcore.model.CCTVStatus;
+import init.upinmcse.cctvcore.model.Zone;
 import init.upinmcse.cctvcore.repository.CCTVCameraInfoRepository;
 import init.upinmcse.cctvcore.service.ICCTVService;
 import init.upinmcse.cctvcore.service.IStreamService;
@@ -42,7 +43,23 @@ public class CCTVService implements ICCTVService {
 
     @Override
     public CCTVRes updateCCTVZone(UpdateCCTVZoneReq updateCCTVZoneReq) {
-        return null;
+        CCTVCameraInfo camera = cameraInfoRepository.findById(updateCCTVZoneReq.getCameraId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<Zone> zones = updateCCTVZoneReq.getZones() == null
+                ? new ArrayList<>()
+                : updateCCTVZoneReq.getZones().stream()
+                        .map(z -> Zone.builder()
+                                .name(z.getName())
+                                .type(z.getType())
+                                .enabled(z.isEnabled())
+                                .points(z.getPoints())
+                                .build())
+                        .collect(Collectors.toList());
+
+        camera.setZones(zones);
+        CCTVCameraInfo saved = cameraInfoRepository.save(camera);
+        return CCTVInfoMapper.toResponse(saved);
     }
 
     @Override
