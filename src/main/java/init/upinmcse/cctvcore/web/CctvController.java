@@ -148,7 +148,7 @@ public class CctvController {
     public SseEmitter streamCameraStatus() {
         SseEmitter emitter = cctvsseService.subscribe();
 
-        // Gửi snapshot ngay khi vừa connect
+        // Check snapshot ngay khi vừa connect
         try {
             List<CCTVStatusEvent.CCTVStatus> snapshot = cctvService.getAllCameras()
                     .stream()

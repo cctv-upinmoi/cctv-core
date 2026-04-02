@@ -17,7 +17,7 @@ public class CCTVStatusEvent {
     public static class CCTVStatus {
         private String    id;
         private String  name;
-        private String  status;     // "OK" | "ERROR"
+        private String  status;     // "OK" | "NOK"
         private Instant checkedAt;
     }
 }
