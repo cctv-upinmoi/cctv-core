@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableFeignClients
 @EnableMongoAuditing
-//@EnableScheduling
+@EnableScheduling
 public class CctvCoreApplication {
 
     public static void main(String[] args) {

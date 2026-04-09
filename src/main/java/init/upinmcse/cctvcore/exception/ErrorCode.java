@@ -17,6 +17,8 @@ public enum ErrorCode {
     USERNAME_IS_MISSING(1010, "error.username-is-missing", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1011, "error.user-not-existed", HttpStatus.BAD_REQUEST),
 
+    CAMERA_NOT_FOUND(2001, "error.camera-not-found", HttpStatus.NOT_FOUND),
+    INVALID_CAMERA_STATUS(2002, "error.invalid-camera-status", HttpStatus.BAD_REQUEST),
 
     INVALID_FILE(3000, "error.csv-failed", HttpStatus.BAD_REQUEST)
     ;

@@ -17,7 +17,6 @@ public class CCTVRes {
     String name;
     String ip;
     Integer port;
-    String username;
     String status;
     String mode;
     String rtspStreamUrl;

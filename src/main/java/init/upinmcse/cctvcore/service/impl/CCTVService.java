@@ -15,7 +15,6 @@ import init.upinmcse.cctvcore.model.Zone;
 import init.upinmcse.cctvcore.repository.CCTVCameraInfoRepository;
 import init.upinmcse.cctvcore.service.ICCTVService;
 import init.upinmcse.cctvcore.service.IStreamService;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +39,12 @@ public class CCTVService implements ICCTVService {
     private final PasswordEncoder passwordEncoder;
     private final CSVMapper csvMapper;
     private final IStreamService streamService;
+    private final Validator validator;
 
     @Override
     public CCTVRes updateCCTVZone(UpdateCCTVZoneReq updateCCTVZoneReq) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(updateCCTVZoneReq.getCameraId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
 
         List<Zone> zones = updateCCTVZoneReq.getZones() == null
                 ? new ArrayList<>()
@@ -131,19 +131,22 @@ public class CCTVService implements ICCTVService {
     @Override
     public CCTVRes updateCCTVCameraInfo(UpdateCCTVReq request) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(request.getCameraId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)); // need add CAMERA_NOT_FOUND exception
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
 
         CCTVInfoMapper.updateEntity(camera, request);
-        
+
         if (request.getStatus() != null) {
             try {
                 camera.setStatus(CCTVStatus.valueOf(request.getStatus().toUpperCase()));
             } catch (IllegalArgumentException e) {
-                // Ignore or throw error if status is invalid
+                throw new AppException(ErrorCode.INVALID_CAMERA_STATUS);
             }
         }
 
-        camera.setPwd(passwordEncoder.encode(request.getPwd()));
+        if (request.getPwd() != null && !request.getPwd().isBlank()) {
+            camera.setPwd(passwordEncoder.encode(request.getPwd()));
+        }
+
         CCTVCameraInfo updated = cameraInfoRepository.save(camera);
         return CCTVInfoMapper.toResponse(updated);
     }
@@ -151,14 +154,14 @@ public class CCTVService implements ICCTVService {
     @Override
     public CCTVRes getCCTVCameraInfoById(String id) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
         return CCTVInfoMapper.toResponse(camera);
     }
 
     @Override
     public void deleteCCTVCameraInfoById(String id) {
         if (!cameraInfoRepository.existsById(id)) {
-            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+            throw new AppException(ErrorCode.CAMERA_NOT_FOUND);
         }
         cameraInfoRepository.deleteById(id);
     }
@@ -172,7 +175,6 @@ public class CCTVService implements ICCTVService {
     }
 
     private List<ImportCCTVResult.RowError> validate(Object obj, int row) {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         return validator.validate(obj).stream()
                 .map(v -> ImportCCTVResult.RowError.builder()
                         .row(row)

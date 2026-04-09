@@ -110,10 +110,9 @@ public class CctvController {
     })
     @AdminAccess
     @DeleteMapping("/{id}")
-    public AppResponse<String> deleteCCTV(){
-        return AppResponse.<String>builder()
-                .data("delete")
-                .build();
+    public AppResponse<Void> deleteCCTV(@PathVariable String id) {
+        cctvService.deleteCCTVCameraInfoById(id);
+        return AppResponse.<Void>builder().build();
     }
 
     @ConfiguratorAccess
