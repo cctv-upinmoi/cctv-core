@@ -1,6 +1,6 @@
 package init.upinmcse.cctvcore.dto.request;
 
-import init.upinmcse.cctvcore.model.ZoneType;
+import init.upinmcse.cctvcore.model.enums.ZoneType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

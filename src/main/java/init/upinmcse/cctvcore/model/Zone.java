@@ -1,5 +1,6 @@
 package init.upinmcse.cctvcore.model;
 
+import init.upinmcse.cctvcore.model.enums.ZoneType;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 

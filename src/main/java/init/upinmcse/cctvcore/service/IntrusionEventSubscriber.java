@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.service.impl;
+package init.upinmcse.cctvcore.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import init.upinmcse.cctvcore.dto.event.IntrusionEvent;
@@ -24,17 +24,12 @@ public class IntrusionEventSubscriber implements MessageListener {
         try {
             IntrusionEvent event = objectMapper.readValue(message.getBody(), IntrusionEvent.class);
 
-            log.warn(
-                    "🚨 INTRUSION | eventId={} | camera={} | zone={} ({}) | conf={}",
-                    event.getEventId(),
-                    event.getCameraName(),
-                    event.getZoneName(),
-                    event.getZoneType(),
-                    event.getConfidence() != null ? String.format("%.2f", event.getConfidence()) : "N/A"
-            );
+            // create notify record
 
+            // save db
+
+            // push notify to ui
             messagingTemplate.convertAndSend(WS_TOPIC, event);
-
         } catch (Exception e) {
             log.error("Failed to process intrusion event from Redis: {}", e.getMessage());
         }

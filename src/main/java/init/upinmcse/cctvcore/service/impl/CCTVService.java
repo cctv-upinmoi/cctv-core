@@ -10,7 +10,7 @@ import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.mapper.CCTVInfoMapper;
 import init.upinmcse.cctvcore.mapper.CSVMapper;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
-import init.upinmcse.cctvcore.model.CCTVStatus;
+import init.upinmcse.cctvcore.model.enums.CCTVStatus;
 import init.upinmcse.cctvcore.model.Zone;
 import init.upinmcse.cctvcore.repository.CCTVCameraInfoRepository;
 import init.upinmcse.cctvcore.service.ICCTVService;

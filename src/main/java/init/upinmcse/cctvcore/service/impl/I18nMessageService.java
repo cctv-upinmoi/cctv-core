@@ -1,7 +1,6 @@
 package init.upinmcse.cctvcore.service.impl;
 
 import init.upinmcse.cctvcore.config.LanguageType;
-import init.upinmcse.cctvcore.service.I18nMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -12,7 +11,7 @@ import java.util.Locale;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class I18nMessageServiceImpl implements I18nMessageService {
+public class I18nMessageService implements init.upinmcse.cctvcore.service.I18nMessageService {
     private final MessageSource messageSource;
 
     @Override

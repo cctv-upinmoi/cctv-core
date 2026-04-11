@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.model;
+package init.upinmcse.cctvcore.model.enums;
 
 import lombok.Getter;
 
