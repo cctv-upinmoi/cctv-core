@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +55,7 @@ public class UserInfoService implements IUserService {
     }
 
     @Override
+    @Transactional
     public CCTVUserInfoRes register(RegistrationReq request) {
         try {
             // Create account in KeyCloak

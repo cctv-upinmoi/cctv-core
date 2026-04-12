@@ -2,9 +2,10 @@ package init.upinmcse.cctvcore.scheduler;
 
 import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
+import init.upinmcse.cctvcore.model.enums.CCTVStatus;
 import init.upinmcse.cctvcore.service.ICCTVService;
 import init.upinmcse.cctvcore.service.IStreamService;
-import init.upinmcse.cctvcore.service.impl.CCTVSSEService;
+import init.upinmcse.cctvcore.service.CCTVSSEService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -36,29 +37,25 @@ public class CCTVHealthCheck {
         List<CCTVStatusEvent.CCTVStatus> results = new ArrayList<>();
 
         for (CCTVRes camera : cameras) {
-            String newStatus;
+            CCTVStatus newStatus = CCTVStatus.OK;
             try {
                 boolean isHealthy = streamService.getStreamHealthCheck(camera.getId());
-                newStatus = isHealthy ? "OK" : "ERROR";
+                newStatus = isHealthy ? CCTVStatus.OK : CCTVStatus.NOK;
 
-                if (!newStatus.equals(camera.getStatus())) {
-                    log.info("Camera [{}] status changed: {} -> {}",
-                            camera.getName(), camera.getStatus(), newStatus);
-                    // cctvService.updateCameraStatus(camera.getId(), newStatus);
-                }
+                log.info("Camera [{}] status changed: {} -> {}",
+                        camera.getName(), camera.getStatus(), newStatus);
+                cctvService.updateCameraStatus(camera.getId(), newStatus);
             } catch (Exception e) {
                 log.error("Health check failed for camera [{}]: {}", camera.getName(), e.getMessage());
-                newStatus = "ERROR";
             }
 
             results.add(new CCTVStatusEvent.CCTVStatus(
                     camera.getId(),
                     camera.getName(),
-                    newStatus,
+                    newStatus.toString(),
                     Instant.now()
             ));
         }
-
         cctvSSEService.broadcast(new CCTVStatusEvent("update", results));
         log.info("Camera health check completed. Broadcasted {} results.", results.size());
     }

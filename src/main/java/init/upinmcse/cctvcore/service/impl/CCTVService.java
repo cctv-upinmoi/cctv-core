@@ -1,5 +1,6 @@
 package init.upinmcse.cctvcore.service.impl;
 
+import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -42,6 +44,7 @@ public class CCTVService implements ICCTVService {
     private final Validator validator;
 
     @Override
+    @Transactional
     public CCTVRes updateCCTVZone(UpdateCCTVZoneReq updateCCTVZoneReq) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(updateCCTVZoneReq.getCameraId())
                 .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
@@ -63,16 +66,19 @@ public class CCTVService implements ICCTVService {
     }
 
     @Override
+    @Transactional
     public CCTVRes addCCTVCameraInfo(AddCCTVReq request) {
         CCTVCameraInfo camera = CCTVInfoMapper.toEntity(request);
         camera.setStatus(CCTVStatus.OK);
-        
-        CCTVCameraInfo saved = cameraInfoRepository.save(camera);
 
+        streamService.addOrUpdateCCTV(request.getName(), List.of(request.getRtspStreamUrl()));
+
+        CCTVCameraInfo saved = cameraInfoRepository.save(camera);
         return CCTVInfoMapper.toResponse(saved);
     }
 
     @Override
+    @Transactional
     public ImportCCTVResult addCCTVfromCSV(MultipartFile csv) {
         List<CCTVRes> imported = new ArrayList<>();
         List<ImportCCTVResult.RowError> errors = new ArrayList<>();
@@ -129,6 +135,7 @@ public class CCTVService implements ICCTVService {
     }
 
     @Override
+    @Transactional
     public CCTVRes updateCCTVCameraInfo(UpdateCCTVReq request) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(request.getCameraId())
                 .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
@@ -172,6 +179,18 @@ public class CCTVService implements ICCTVService {
                 .stream()
                 .map(CCTVInfoMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void updateCameraStatus(String id, CCTVStatus status) {
+        CCTVCameraInfo camera = cameraInfoRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
+
+        if (camera.getStatus() == status) return;
+
+        camera.setStatus(status);
+        cameraInfoRepository.save(camera);
     }
 
     private List<ImportCCTVResult.RowError> validate(Object obj, int row) {

@@ -10,7 +10,7 @@ import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
 import init.upinmcse.cctvcore.service.ICCTVService;
-import init.upinmcse.cctvcore.service.impl.CCTVSSEService;
+import init.upinmcse.cctvcore.service.CCTVSSEService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

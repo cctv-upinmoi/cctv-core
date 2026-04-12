@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.config;
+package init.upinmcse.cctvcore.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

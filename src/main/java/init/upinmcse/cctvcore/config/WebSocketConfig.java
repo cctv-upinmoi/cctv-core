@@ -1,5 +1,6 @@
 package init.upinmcse.cctvcore.config;
 
+import init.upinmcse.cctvcore.handler.JwtChannelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

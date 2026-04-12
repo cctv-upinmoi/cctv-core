@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.service.impl;
+package init.upinmcse.cctvcore.service;
 
 import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class CCTVSSEService {
             }
         }
 
-        emitters.removeAll(dead);
+        dead.forEach(emitters::remove);
     }
 
     /** Chống proxy/nginx timeout */
