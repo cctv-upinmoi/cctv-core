@@ -24,7 +24,7 @@ public class CCTVHealthCheck {
     private final ICCTVService     cctvService;
     private final CCTVSSEService   cctvSSEService;
 
-    @Scheduled(fixedDelayString = "${camera.health-check.interval-ms:60000}")
+//    @Scheduled(fixedDelayString = "${camera.health-check.interval-ms:60000}")
     public void healthCheckAllCameras() {
         log.info("Starting camera health check...");
 

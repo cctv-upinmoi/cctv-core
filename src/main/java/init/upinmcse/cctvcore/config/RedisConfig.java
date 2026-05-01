@@ -20,7 +20,7 @@ public class RedisConfig {
     @Value("${redis.channels.intrusion-events}")
     private String intrusionEventChannel;
 
-    @Value(("${redis.chanels.modify-cctv}"))
+    @Value("${redis.channels.modify-cctv}")
     private String modifyCCTVChannel;
 
     @Bean

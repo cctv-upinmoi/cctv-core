@@ -67,8 +67,6 @@ public class UserInfoService implements IUserService {
                     .scope("openid")
                     .build());
 
-            log.info("TokenInfo {}", token);
-
             // Create user with client Token and given info
             // Get userId of keyCloak account
             var creationResponse = idpClient.createUser(
