@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.service;
+package init.upinmcse.cctvcore.service.impl;
 
 import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import lombok.extern.slf4j.Slf4j;

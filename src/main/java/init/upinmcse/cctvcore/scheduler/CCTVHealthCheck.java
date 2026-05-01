@@ -5,10 +5,9 @@ import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.model.enums.CCTVStatus;
 import init.upinmcse.cctvcore.service.ICCTVService;
 import init.upinmcse.cctvcore.service.IStreamService;
-import init.upinmcse.cctvcore.service.CCTVSSEService;
+import init.upinmcse.cctvcore.service.impl.CCTVSSEService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

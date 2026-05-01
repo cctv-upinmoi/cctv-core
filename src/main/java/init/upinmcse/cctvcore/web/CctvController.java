@@ -1,8 +1,8 @@
 package init.upinmcse.cctvcore.web;
 
 import init.upinmcse.cctvcore.common.AppResponse;
-import init.upinmcse.cctvcore.config.AdminAccess;
-import init.upinmcse.cctvcore.config.ConfiguratorAccess;
+import init.upinmcse.cctvcore.security.AdminAccess;
+import init.upinmcse.cctvcore.security.ConfiguratorAccess;
 import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
@@ -10,7 +10,7 @@ import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
 import init.upinmcse.cctvcore.service.ICCTVService;
-import init.upinmcse.cctvcore.service.CCTVSSEService;
+import init.upinmcse.cctvcore.service.impl.CCTVSSEService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.config;
+package init.upinmcse.cctvcore.security;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.service;
+package init.upinmcse.cctvcore.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import init.upinmcse.cctvcore.dto.event.IntrusionEvent;
