@@ -1,11 +1,12 @@
 package init.upinmcse.cctvcore.service.impl;
 
-import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
+import init.upinmcse.cctvcore.dto.event.ZoneUpdateEvent;
 import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
+import init.upinmcse.cctvcore.event.producer.ModifyCCTVPublisher;
 import init.upinmcse.cctvcore.exception.AppException;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.mapper.CCTVInfoMapper;
@@ -42,6 +43,7 @@ public class CCTVService implements ICCTVService {
     private final CSVMapper csvMapper;
     private final IStreamService streamService;
     private final Validator validator;
+    private final ModifyCCTVPublisher modifyCCTVPublisher;
 
     @Override
     @Transactional
@@ -62,6 +64,14 @@ public class CCTVService implements ICCTVService {
 
         camera.setZones(zones);
         CCTVCameraInfo saved = cameraInfoRepository.save(camera);
+
+        // publish event
+        ZoneUpdateEvent event = ZoneUpdateEvent.builder()
+                .cameraId(camera.getId())
+                .zones(camera.getZones())
+                .build();
+        modifyCCTVPublisher.publish(event);
+
         return CCTVInfoMapper.toResponse(saved);
     }
 

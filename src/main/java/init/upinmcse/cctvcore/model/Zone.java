@@ -14,19 +14,19 @@ import java.util.List;
 public class Zone {
 
     /**
-     * Tên zone, ví dụ: "Zone A", "Khu vực cửa chính"
+     * Zone name, ex: "Zone A", "Khu vực cửa chính"
      */
     @Field("NAME")
     private String name;
 
     /**
-     * Loại zone: INTRUSION, LOITERING, LINE_CROSSING...
+     * Zone type: INTRUSION, LOITERING, LINE_CROSSING...
      */
     @Field("TYPE")
     private ZoneType type;
 
     /**
-     * Bật/tắt zone
+     * En/disable zone
      */
     @Field("ENABLED")
     private boolean enabled;
