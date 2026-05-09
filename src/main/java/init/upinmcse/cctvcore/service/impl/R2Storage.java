@@ -23,10 +23,10 @@ public class R2Storage implements IStorageService {
 
     private final S3Client r2Client;
 
-    @Value("${cloudflare.r2.bucket-name}")
+    @Value("${cloud-storage.r2.bucket-name}")
     private String bucketName;
 
-    @Value("${cloudflare.r2.public-url}")
+    @Value("${cloud-storage.r2.public-url}")
     private String publicUrl;
 
     @Override

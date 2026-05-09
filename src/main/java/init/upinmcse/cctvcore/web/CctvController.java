@@ -44,7 +44,6 @@ public class CctvController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = AppResponse.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PermitAll
     @GetMapping
     public AppResponse<List<CCTVRes>> getAllCameras() {
         return AppResponse.<List<CCTVRes>>builder()

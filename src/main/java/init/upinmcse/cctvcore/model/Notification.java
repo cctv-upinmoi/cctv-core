@@ -33,7 +33,10 @@ public class Notification extends BaseEntity {
     @Field("detected_at")
     private Instant detectedAt;
 
-    /** Relative URL served by Spring, e.g. /snapshots/cam1/Zone_A_20260501_103000.jpg */
     @Field("image_url")
     private String imageUrl;
+
+    @Builder.Default
+    @Field("read")
+    private boolean read = false;
 }

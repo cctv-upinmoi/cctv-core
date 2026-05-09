@@ -15,13 +15,13 @@ import java.net.URI;
 @Configuration
 @ConditionalOnProperty(name = "app.storage.type", havingValue = "r2")
 public class R2Config {
-    @Value("${cloudflare.r2.account-id}")
+    @Value("${cloud-storage.r2.account-id}")
     private String accountId;
 
-    @Value("${cloudflare.r2.access-key}")
+    @Value("${cloud-storage.r2.access-key}")
     private String accessKey;
 
-    @Value("${cloudflare.r2.secret-key}")
+    @Value("${cloud-storage.r2.secret-key}")
     private String secretKey;
 
     @Bean

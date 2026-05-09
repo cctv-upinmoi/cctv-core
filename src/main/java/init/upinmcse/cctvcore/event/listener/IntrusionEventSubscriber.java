@@ -52,21 +52,19 @@ public class IntrusionEventSubscriber implements MessageListener {
                     .imageUrl(imageUrl)
                     .build();
 
-            log.info("database: {}",notification.getCameraName());
-//            notificationRepository.save(notification);
+            notification = notificationRepository.save(notification);
+            log.info("Saved notification id={} camera={}", notification.getId(), notification.getCameraName());
 
             NotificationPayload payload = NotificationPayload.builder()
                     .id(notification.getId())
                     .cameraId(notification.getCameraId())
                     .cameraName(notification.getCameraName())
                     .zoneName(notification.getZoneName())
-                    .confidence(notification.getConfidence())
                     .detectedAt(notification.getDetectedAt())
                     .imageUrl(imageUrl)
                     .build();
 
-//            messagingTemplate.convertAndSend(WS_TOPIC, payload);
-            log.info("websocket: {}", payload.getCameraName());
+            messagingTemplate.convertAndSend(WS_TOPIC, payload);
             log.info("Intrusion alert processed: camera={} zone={} image={}",
                     event.getCameraName(), event.getZoneName(), imageUrl);
 

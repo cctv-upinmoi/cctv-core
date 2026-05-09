@@ -20,7 +20,9 @@ public enum ErrorCode {
     CAMERA_NOT_FOUND(2001, "error.camera-not-found", HttpStatus.NOT_FOUND),
     INVALID_CAMERA_STATUS(2002, "error.invalid-camera-status", HttpStatus.BAD_REQUEST),
 
-    INVALID_FILE(3000, "error.csv-failed", HttpStatus.BAD_REQUEST)
+    INVALID_FILE(3000, "error.csv-failed", HttpStatus.BAD_REQUEST),
+
+    NOTIFICATION_NOT_FOUND(4001, "error.notification-not-found", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String messageKey, HttpStatusCode statusCode) {
