@@ -20,5 +20,7 @@ public class NotificationRes {
     private Instant detectedAt;
     private String imageUrl;
     private boolean read;
+    private String alertType;
+    private Integer personCount;
     private Date createdAt;
 }

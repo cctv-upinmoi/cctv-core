@@ -8,6 +8,7 @@ import init.upinmcse.cctvcore.service.IStreamService;
 import init.upinmcse.cctvcore.service.impl.CCTVSSEService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -23,7 +24,7 @@ public class CCTVHealthCheck {
     private final ICCTVService     cctvService;
     private final CCTVSSEService   cctvSSEService;
 
-//    @Scheduled(fixedDelayString = "${camera.health-check.interval-ms:60000}")
+    @Scheduled(fixedDelayString = "${camera.health-check.interval-ms:60000}")
     public void healthCheckAllCameras() {
         log.info("Starting camera health check...");
 
@@ -38,7 +39,7 @@ public class CCTVHealthCheck {
         for (CCTVRes camera : cameras) {
             CCTVStatus newStatus = CCTVStatus.OK;
             try {
-                boolean isHealthy = streamService.getStreamHealthCheck(camera.getId());
+                boolean isHealthy = streamService.getStreamHealthCheck(camera.getName());
                 newStatus = isHealthy ? CCTVStatus.OK : CCTVStatus.NOK;
 
                 log.info("Camera [{}] status changed: {} -> {}",

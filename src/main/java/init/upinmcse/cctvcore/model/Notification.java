@@ -36,6 +36,12 @@ public class Notification extends BaseEntity {
     @Field("image_url")
     private String imageUrl;
 
+    @Field("alert_type")
+    private String alertType;
+
+    @Field("person_count")
+    private Integer personCount;
+
     @Builder.Default
     @Field("read")
     private boolean read = false;

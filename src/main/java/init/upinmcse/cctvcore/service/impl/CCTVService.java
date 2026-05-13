@@ -118,6 +118,15 @@ public class CCTVService implements ICCTVService {
                         continue;
                     }
 
+                    if (cameraInfoRepository.existsByName(req.getName())) {
+                        errors.add(ImportCCTVResult.RowError.builder()
+                                .row(rowIndex)
+                                .field("name")
+                                .message("Camera name already exists: " + req.getName())
+                                .build());
+                        continue;
+                    }
+
                     CCTVRes res = addCCTVCameraInfo(req);
                     imported.add(res);
 

@@ -50,6 +50,8 @@ public class IntrusionEventSubscriber implements MessageListener {
                     .confidence(event.getConfidence())
                     .detectedAt(event.getDetectedAt())
                     .imageUrl(imageUrl)
+                    .alertType(event.getAlertType() != null ? event.getAlertType() : "INTRUSION")
+                    .personCount(event.getPersonCount() != null ? event.getPersonCount() : 1)
                     .build();
 
             notification = notificationRepository.save(notification);
@@ -62,6 +64,8 @@ public class IntrusionEventSubscriber implements MessageListener {
                     .zoneName(notification.getZoneName())
                     .detectedAt(notification.getDetectedAt())
                     .imageUrl(imageUrl)
+                    .alertType(notification.getAlertType())
+                    .personCount(notification.getPersonCount())
                     .build();
 
             messagingTemplate.convertAndSend(WS_TOPIC, payload);

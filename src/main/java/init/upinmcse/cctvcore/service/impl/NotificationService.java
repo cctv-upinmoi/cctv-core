@@ -61,6 +61,8 @@ public class NotificationService implements INotificationService {
                 .detectedAt(n.getDetectedAt())
                 .imageUrl(n.getImageUrl())
                 .read(n.isRead())
+                .alertType(n.getAlertType())
+                .personCount(n.getPersonCount())
                 .createdAt(n.getCreatedAt())
                 .build();
     }

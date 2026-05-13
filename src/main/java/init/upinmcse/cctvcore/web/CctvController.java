@@ -155,6 +155,7 @@ public class CctvController {
                     content = @Content(mediaType = "text/event-stream")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
+    @PermitAll
     @GetMapping(value = "/status/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamCameraStatus() {
         SseEmitter emitter = cctvsseService.subscribe();

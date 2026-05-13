@@ -33,6 +33,14 @@ public class IntrusionEvent {
     @JsonProperty("timestamp")
     private Instant detectedAt;
 
+    /** INTRUSION | PROXIMITY */
+    @JsonProperty("alert_type")
+    private String alertType;
+
+    /** Number of persons detected in zone at time of alert */
+    @JsonProperty("person_count")
+    private Integer personCount;
+
     /** Base64-encoded JPEG snapshot */
     @JsonProperty("image")
     private String image;

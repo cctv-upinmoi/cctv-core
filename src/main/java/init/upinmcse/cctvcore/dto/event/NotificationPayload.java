@@ -18,4 +18,6 @@ public class NotificationPayload {
     private String zoneName;
     private Instant detectedAt;
     private String imageUrl;
+    private String alertType;
+    private Integer personCount;
 }

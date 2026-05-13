@@ -3,11 +3,13 @@ package init.upinmcse.cctvcore.service.impl;
 import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,8 +53,8 @@ public class CCTVSSEService {
     }
 
     /** Chống proxy/nginx timeout */
-//    @Scheduled(fixedDelay = 30_000)
-//    public void heartbeat() {
-//        broadcast(new CameraStatusEvent("heartbeat", Collections.emptyList()));
-//    }
+    @Scheduled(fixedDelay = 30_000)
+    public void heartbeat() {
+        broadcast(new CCTVStatusEvent("heartbeat", Collections.emptyList()));
+    }
 }

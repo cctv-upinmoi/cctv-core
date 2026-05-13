@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CCTVCameraInfoRepository extends MongoRepository<CCTVCameraInfo, String> {
     Optional<CCTVCameraInfo> findByIndexId(Long s);
+    boolean existsByName(String name);
 }
