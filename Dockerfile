@@ -11,7 +11,7 @@ RUN mvn package -DskipTests
 
 # Stage 2: create image
 # Start with JDK
-FROM amazoncorretto:25.0.1
+FROM amazoncorretto:21
 
 # Set working folder to App and copy complied file from above step
 WORKDIR /app
