@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.config;
+package init.upinmcse.cctvcore.security;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -44,6 +44,7 @@ public class SecurityConfig {
         Multimap<HttpMethod, String> permitAllUrls = getPermitAllUrlsFromAnnotations();
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers(HttpMethod.GET, "/*.html", "/*.css", "/*.js").permitAll()
+                .requestMatchers("/ws/**").permitAll()
                 .requestMatchers(HttpMethod.GET, permitAllUrls.get(HttpMethod.GET).toArray(new String[0])).permitAll()
                 .requestMatchers(HttpMethod.POST, permitAllUrls.get(HttpMethod.POST).toArray(new String[0])).permitAll()
                 .requestMatchers(HttpMethod.PUT, permitAllUrls.get(HttpMethod.PUT).toArray(new String[0])).permitAll()

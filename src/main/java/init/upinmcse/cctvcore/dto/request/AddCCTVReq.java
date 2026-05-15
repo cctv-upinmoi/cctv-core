@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,15 +21,16 @@ public class AddCCTVReq {
 
     Integer port;
 
-    @NotBlank(message = "CAMERA_USERNAME_REQUIRED")
+//    @NotBlank(message = "CAMERA_USERNAME_REQUIRED")
     String username;
 
-    @NotBlank(message = "CAMERA_PASSWORD_REQUIRED")
+//    @NotBlank(message = "CAMERA_PASSWORD_REQUIRED")
     String pwd;
 
     @NotNull(message = "CAMERA_MODE_REQUIRED")
     String mode;
 
+    @NotNull(message = "RTSP_URL_REQUIRED")
     String rtspStreamUrl;
 
     Double longitude;

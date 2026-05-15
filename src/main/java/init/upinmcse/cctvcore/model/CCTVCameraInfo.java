@@ -1,5 +1,7 @@
 package init.upinmcse.cctvcore.model;
 
+import init.upinmcse.cctvcore.model.enums.CCTVStatus;
+import init.upinmcse.cctvcore.model.enums.Mode;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;

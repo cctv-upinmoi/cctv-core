@@ -1,0 +1,48 @@
+package init.upinmcse.cctvcore.model;
+
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.Instant;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Document(collection = "CCTVNotification")
+public class Notification extends BaseEntity {
+
+    @Id
+    private String id;
+
+    @Field("camera_id")
+    private String cameraId;
+
+    @Field("camera_name")
+    private String cameraName;
+
+    @Field("zone_name")
+    private String zoneName;
+
+    @Field("confidence")
+    private Double confidence;
+
+    @Field("detected_at")
+    private Instant detectedAt;
+
+    @Field("image_url")
+    private String imageUrl;
+
+    @Field("alert_type")
+    private String alertType;
+
+    @Field("person_count")
+    private Integer personCount;
+
+    @Builder.Default
+    @Field("read")
+    private boolean read = false;
+}

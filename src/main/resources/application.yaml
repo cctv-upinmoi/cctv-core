@@ -11,13 +11,46 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/cctv
+          issuer-uri: '${KC_URI:http://localhost:8081/realms/smart-cctv}'
+
   data:
     mongodb:
-      uri:
+      uri: '${MONGODB_URI:mongodb://localhost:27017/smart_cctv?directConnection=true}'
+    redis:
+      host: '${REDIS_HOST:localhost}'
+      port: '${REDIS_PORT:6379}'
+
+redis:
+  channels:
+    intrusion-events: '${REDIS_CHANNEL_INTRUSION:intrusion_alerts}'
+    modify-cctv: '${REDIS_CHANNEL_MODIFY:modify_zone_cctv}'
 
 idp:
-  realm: cctv
-  url: http://localhost:8180
-  client-id:
-  client-secret:
+  realm: '${KC_REALM:smart-cctv}'
+  url: '${KC_URL:http://localhost:8081}'
+  client-id: '${KC_CLIENT_ID:cctv-core}'
+  client-secret: '${KC_CLIENT_SECRET:}'
+
+stream:
+  app:
+    base:
+      url: '${GO2RTC_URL:localhost:1984}'
+
+cloud-storage:
+  r2:
+    account-id: '${R2_ACCOUNT_ID}'
+    access-key: '${R2_ACCESS_KEY}'
+    secret-key: '${R2_SECRET_KEY}'
+    bucket-name: '${R2_BUCKET_NAME:smart-cctv}'
+    public-url: '${R2_PUBLIC_URL}'
+
+camera:
+  health-check:
+    interval-ms: '${CAMERA_HEALTH_INTERVAL_MS:60000}'
+
+app:
+  storage:
+    type: '${STORAGE_TYPE:r2}'
+    base-url: '${STORAGE_BASE_URL:http://localhost:8080/cctv-core/snapshots}'
+  snapshot:
+    dir: '${SNAPSHOT_DIR:./snapshots}'

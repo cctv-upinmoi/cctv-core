@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.config;
+package init.upinmcse.cctvcore.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

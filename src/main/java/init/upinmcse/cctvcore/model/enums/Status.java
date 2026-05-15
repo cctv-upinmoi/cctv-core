@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.model;
+package init.upinmcse.cctvcore.model.enums;
 
 /**
  * Java Enum which represents streaming status for particular camera.

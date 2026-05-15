@@ -1,4 +1,4 @@
-package init.upinmcse.cctvcore.model;
+package init.upinmcse.cctvcore.model.enums;
 
 public enum ZoneType {
     INTRUSION,      // Xâm nhập vào zone

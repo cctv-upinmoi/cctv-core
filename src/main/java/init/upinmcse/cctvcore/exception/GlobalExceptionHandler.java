@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     private static final String MIN_ATTRIBUTE = "min";
 
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<AppResponse> handlingRuntimeException(RuntimeException exception) {
+    ResponseEntity<AppResponse> handlingRuntimeException(Exception exception) {
         log.error("Exception: ", exception);
         ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
         Locale locale = LocaleContextHolder.getLocale();
