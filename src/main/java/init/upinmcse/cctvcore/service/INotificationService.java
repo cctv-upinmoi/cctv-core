@@ -12,4 +12,6 @@ public interface INotificationService {
     void markRead(String id);
 
     void markAllRead();
+
+    String attachVideo(String eventId, byte[] videoData);
 }

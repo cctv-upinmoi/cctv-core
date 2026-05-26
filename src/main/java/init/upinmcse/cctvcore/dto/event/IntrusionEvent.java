@@ -17,6 +17,9 @@ import java.time.Instant;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IntrusionEvent {
 
+    @JsonProperty("event_id")
+    private String eventId;
+
     @JsonProperty("camera_id")
     private String cameraId;
 

@@ -13,6 +13,7 @@ import java.time.Instant;
 @Builder
 public class NotificationPayload {
     private String id;
+    private String eventId;
     private String cameraId;
     private String cameraName;
     private String zoneName;

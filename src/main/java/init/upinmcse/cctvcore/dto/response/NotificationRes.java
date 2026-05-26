@@ -14,11 +14,13 @@ import java.util.Date;
 @Builder
 public class NotificationRes {
     private String id;
+    private String eventId;
     private String cameraId;
     private String cameraName;
     private String zoneName;
     private Instant detectedAt;
     private String imageUrl;
+    private String videoUrl;
     private boolean read;
     private String alertType;
     private Integer personCount;
