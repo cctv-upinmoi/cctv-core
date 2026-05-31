@@ -6,7 +6,6 @@ import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.model.Notification;
 import init.upinmcse.cctvcore.repository.NotificationRepository;
 import init.upinmcse.cctvcore.service.INotificationService;
-import init.upinmcse.cctvcore.service.IStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class NotificationService implements INotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final IStorageService storageService;
 
     @Override
     public Page<NotificationRes> getNotifications(int page, int size, Boolean read) {
@@ -54,18 +52,6 @@ public class NotificationService implements INotificationService {
                 });
     }
 
-    @Override
-    public String attachVideo(String eventId, byte[] videoData) {
-        Notification n = notificationRepository.findByEventId(eventId)
-                .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
-        String safeCam = n.getCameraName().replaceAll("[^a-zA-Z0-9_-]", "_");
-        String key = "clips/" + safeCam + "/" + eventId + ".mp4";
-        String url = storageService.upload(key, videoData, "video/mp4");
-        n.setVideoUrl(url);
-        notificationRepository.save(n);
-        return url;
-    }
-
     private NotificationRes toRes(Notification n) {
         return NotificationRes.builder()
                 .id(n.getId())
@@ -75,7 +61,6 @@ public class NotificationService implements INotificationService {
                 .zoneName(n.getZoneName())
                 .detectedAt(n.getDetectedAt())
                 .imageUrl(n.getImageUrl())
-                .videoUrl(n.getVideoUrl())
                 .read(n.isRead())
                 .alertType(n.getAlertType())
                 .personCount(n.getPersonCount())

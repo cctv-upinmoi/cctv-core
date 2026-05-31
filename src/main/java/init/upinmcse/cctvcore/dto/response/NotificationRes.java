@@ -20,7 +20,6 @@ public class NotificationRes {
     private String zoneName;
     private Instant detectedAt;
     private String imageUrl;
-    private String videoUrl;
     private boolean read;
     private String alertType;
     private Integer personCount;

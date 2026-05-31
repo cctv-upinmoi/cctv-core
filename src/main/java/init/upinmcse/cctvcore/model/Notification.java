@@ -45,9 +45,6 @@ public class Notification extends BaseEntity {
     @Field("event_id")
     private String eventId;
 
-    @Field("video_url")
-    private String videoUrl;
-
     @Builder.Default
     @Field("read")
     private boolean read = false;
