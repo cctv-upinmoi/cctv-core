@@ -42,6 +42,9 @@ public class Notification extends BaseEntity {
     @Field("person_count")
     private Integer personCount;
 
+    @Field("event_id")
+    private String eventId;
+
     @Builder.Default
     @Field("read")
     private boolean read = false;

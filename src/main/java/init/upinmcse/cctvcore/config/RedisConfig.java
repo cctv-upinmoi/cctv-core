@@ -1,12 +1,9 @@
 package init.upinmcse.cctvcore.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import init.upinmcse.cctvcore.event.listener.IntrusionEventSubscriber;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,7 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -26,14 +22,6 @@ public class RedisConfig {
 
     @Value("${redis.channels.modify-cctv}")
     private String modifyCCTVChannel;
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-    }
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(
@@ -56,11 +44,6 @@ public class RedisConfig {
     }
 
     @Bean
-    public MessageListenerAdapter intrusionListenerAdapter(IntrusionEventSubscriber subscriber) {
-        return new MessageListenerAdapter(subscriber, "onMessage");
-    }
-
-    @Bean
     public ChannelTopic intrusionEventTopic() {
         return new ChannelTopic(intrusionEventChannel);
     }
@@ -71,6 +54,13 @@ public class RedisConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "messaging.provider", havingValue = "redis", matchIfMissing = true)
+    public MessageListenerAdapter intrusionListenerAdapter(IntrusionEventSubscriber subscriber) {
+        return new MessageListenerAdapter(subscriber, "onMessage");
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "messaging.provider", havingValue = "redis", matchIfMissing = true)
     public RedisMessageListenerContainer redisListenerContainer(
             RedisConnectionFactory connectionFactory,
             MessageListenerAdapter intrusionListenerAdapter,

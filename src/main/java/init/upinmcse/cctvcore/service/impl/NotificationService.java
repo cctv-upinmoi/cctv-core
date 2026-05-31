@@ -55,6 +55,7 @@ public class NotificationService implements INotificationService {
     private NotificationRes toRes(Notification n) {
         return NotificationRes.builder()
                 .id(n.getId())
+                .eventId(n.getEventId())
                 .cameraId(n.getCameraId())
                 .cameraName(n.getCameraName())
                 .zoneName(n.getZoneName())

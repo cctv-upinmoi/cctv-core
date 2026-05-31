@@ -7,6 +7,11 @@ spring:
   application:
     name: cctv-core
 
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 55MB
+
   security:
     oauth2:
       resourceserver:
@@ -19,11 +24,29 @@ spring:
     redis:
       host: '${REDIS_HOST:localhost}'
       port: '${REDIS_PORT:6379}'
+  rabbitmq:
+    host: '${RABBITMQ_HOST:localhost}'
+    port: '${RABBITMQ_PORT:5672}'
+    username: '${RABBITMQ_USERNAME:admin}'
+    password: '${RABBITMQ_PASSWORD:admin}'
+    virtual-host: '${RABBITMQ_VHOST:/}'
+
+messaging:
+  provider: '${MESSAGING_PROVIDER:rabbitmq}'
 
 redis:
   channels:
     intrusion-events: '${REDIS_CHANNEL_INTRUSION:intrusion_alerts}'
     modify-cctv: '${REDIS_CHANNEL_MODIFY:modify_zone_cctv}'
+
+rabbitmq:
+  exchange: '${RABBITMQ_EXCHANGE:cctv_events}'
+  queues:
+    intrusion-events: '${RABBITMQ_QUEUE_INTRUSION:intrusion_alerts}'
+    modify-cctv: '${RABBITMQ_QUEUE_MODIFY:modify_zone_cctv}'
+  routing-keys:
+    intrusion-events: '${RABBITMQ_RK_INTRUSION:intrusion_alerts}'
+    modify-cctv: '${RABBITMQ_RK_MODIFY:modify_zone_cctv}'
 
 idp:
   realm: '${KC_REALM:smart-cctv}'
@@ -50,7 +73,7 @@ camera:
 
 app:
   storage:
-    type: '${STORAGE_TYPE:r2}'
+    type: '${STORAGE_TYPE:local}'
     base-url: '${STORAGE_BASE_URL:http://localhost:8080/cctv-core/snapshots}'
   snapshot:
     dir: '${SNAPSHOT_DIR:./snapshots}'

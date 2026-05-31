@@ -6,7 +6,7 @@ import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
-import init.upinmcse.cctvcore.event.producer.ModifyCCTVPublisher;
+import init.upinmcse.cctvcore.event.producer.IModifyCCTVPublisher;
 import init.upinmcse.cctvcore.exception.AppException;
 import init.upinmcse.cctvcore.exception.ErrorCode;
 import init.upinmcse.cctvcore.mapper.CCTVInfoMapper;
@@ -43,7 +43,7 @@ public class CCTVService implements ICCTVService {
     private final CSVMapper csvMapper;
     private final IStreamService streamService;
     private final Validator validator;
-    private final ModifyCCTVPublisher modifyCCTVPublisher;
+    private final IModifyCCTVPublisher modifyCCTVPublisher;
 
     @Override
     @Transactional
