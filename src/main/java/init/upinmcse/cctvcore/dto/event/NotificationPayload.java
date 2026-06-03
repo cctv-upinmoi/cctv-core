@@ -21,4 +21,5 @@ public class NotificationPayload {
     private String imageUrl;
     private String alertType;
     private Integer personCount;
+    private Double confidence;
 }

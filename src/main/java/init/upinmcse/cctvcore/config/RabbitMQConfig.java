@@ -24,11 +24,17 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queues.modify-cctv}")
     private String modifyCCTVQueue;
 
+    @Value("${rabbitmq.queues.notification-dispatch}")
+    private String notificationQueue;
+
     @Value("${rabbitmq.routing-keys.intrusion-events}")
     private String intrusionRoutingKey;
 
     @Value("${rabbitmq.routing-keys.modify-cctv}")
     private String modifyCCTVRoutingKey;
+
+    @Value("${rabbitmq.routing-keys.notification-alert}")
+    private String notificationRoutingKey;
 
     @Bean
     public TopicExchange cctvExchange() {
@@ -53,6 +59,16 @@ public class RabbitMQConfig {
     @Bean
     public Binding modifyCCTVBinding(Queue modifyCCTVQueue, TopicExchange cctvExchange) {
         return BindingBuilder.bind(modifyCCTVQueue).to(cctvExchange).with(modifyCCTVRoutingKey);
+    }
+
+    @Bean
+    public Queue notificationDispatchQueue() {
+        return QueueBuilder.durable(notificationQueue).build();
+    }
+
+    @Bean
+    public Binding notificationBinding(Queue notificationDispatchQueue, TopicExchange cctvExchange) {
+        return BindingBuilder.bind(notificationDispatchQueue).to(cctvExchange).with(notificationRoutingKey);
     }
 
     @Bean

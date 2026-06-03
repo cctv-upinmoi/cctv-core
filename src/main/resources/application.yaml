@@ -7,11 +7,6 @@ spring:
   application:
     name: cctv-core
 
-  servlet:
-    multipart:
-      max-file-size: 50MB
-      max-request-size: 55MB
-
   security:
     oauth2:
       resourceserver:
@@ -44,9 +39,11 @@ rabbitmq:
   queues:
     intrusion-events: '${RABBITMQ_QUEUE_INTRUSION:intrusion_alerts}'
     modify-cctv: '${RABBITMQ_QUEUE_MODIFY:modify_zone_cctv}'
+    notification-dispatch: '${RABBITMQ_QUEUE_NOTIFICATION:cctv.notifications}'
   routing-keys:
     intrusion-events: '${RABBITMQ_RK_INTRUSION:intrusion_alerts}'
     modify-cctv: '${RABBITMQ_RK_MODIFY:modify_zone_cctv}'
+    notification-alert: '${RABBITMQ_RK_NOTIFICATION:notification.send}'
 
 idp:
   realm: '${KC_REALM:smart-cctv}'
