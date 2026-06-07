@@ -1,6 +1,5 @@
 package init.upinmcse.cctvcore.dto.event;
 
-import init.upinmcse.cctvcore.model.Zone;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +10,15 @@ import java.util.List;
 @Setter
 @Builder
 public class ZoneUpdateEvent {
+
     private String cameraId;
-    private List<Zone> zones;
+    private List<ZoneDto> zones;
+
+    @Getter
+    @Builder
+    public static class ZoneDto {
+        private String name;
+        private boolean enabled;
+        private List<double[]> points;
+    }
 }

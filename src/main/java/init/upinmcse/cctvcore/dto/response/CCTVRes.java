@@ -13,7 +13,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CCTVRes {
     String id;
-    Long indexId;
     String name;
     String ip;
     Integer port;

@@ -13,37 +13,32 @@ spring:
         jwt:
           issuer-uri: '${KC_URI:http://localhost:8081/realms/smart-cctv}'
 
-  data:
-    mongodb:
-      uri: '${MONGODB_URI:mongodb://localhost:27017/smart_cctv?directConnection=true}'
-    redis:
-      host: '${REDIS_HOST:localhost}'
-      port: '${REDIS_PORT:6379}'
-  rabbitmq:
-    host: '${RABBITMQ_HOST:localhost}'
-    port: '${RABBITMQ_PORT:5672}'
-    username: '${RABBITMQ_USERNAME:admin}'
-    password: '${RABBITMQ_PASSWORD:admin}'
-    virtual-host: '${RABBITMQ_VHOST:/}'
+  datasource:
+    url: 'jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:smart_cctv}'
+    username: '${POSTGRES_USER:postgres}'
+    password: '${POSTGRES_PASSWORD:postgres}'
+    driver-class-name: org.postgresql.Driver
 
-messaging:
-  provider: '${MESSAGING_PROVIDER:rabbitmq}'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+    show-sql: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
 
-redis:
-  channels:
-    intrusion-events: '${REDIS_CHANNEL_INTRUSION:intrusion_alerts}'
-    modify-cctv: '${REDIS_CHANNEL_MODIFY:modify_zone_cctv}'
-
-rabbitmq:
-  exchange: '${RABBITMQ_EXCHANGE:cctv_events}'
-  queues:
-    intrusion-events: '${RABBITMQ_QUEUE_INTRUSION:intrusion_alerts}'
-    modify-cctv: '${RABBITMQ_QUEUE_MODIFY:modify_zone_cctv}'
-    notification-dispatch: '${RABBITMQ_QUEUE_NOTIFICATION:cctv.notifications}'
-  routing-keys:
-    intrusion-events: '${RABBITMQ_RK_INTRUSION:intrusion_alerts}'
-    modify-cctv: '${RABBITMQ_RK_MODIFY:modify_zone_cctv}'
-    notification-alert: '${RABBITMQ_RK_NOTIFICATION:notification.send}'
+kafka:
+  bootstrap-servers: '${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}'
+  consumer:
+    group-id: cctv-core
+  topics:
+    intrusion-events: '${KAFKA_TOPIC_INTRUSION:intrusion-alerts}'
+    modify-cctv: '${KAFKA_TOPIC_MODIFY:modify-zone-cctv}'
+    notification-dispatch: '${KAFKA_TOPIC_NOTIFICATION:notification-dispatch}'
 
 idp:
   realm: '${KC_REALM:smart-cctv}'

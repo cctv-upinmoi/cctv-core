@@ -51,26 +51,32 @@ public class CCTVService implements ICCTVService {
         CCTVCameraInfo camera = cameraInfoRepository.findById(updateCCTVZoneReq.getCameraId())
                 .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
 
-        List<Zone> zones = updateCCTVZoneReq.getZones() == null
-                ? new ArrayList<>()
-                : updateCCTVZoneReq.getZones().stream()
-                        .map(z -> Zone.builder()
-                                .name(z.getName())
-                                .type(z.getType())
-                                .enabled(z.isEnabled())
-                                .points(z.getPoints())
-                                .build())
-                        .collect(Collectors.toList());
-
-        camera.setZones(zones);
+        camera.getZones().clear();
+        if (updateCCTVZoneReq.getZones() != null) {
+            updateCCTVZoneReq.getZones().stream()
+                    .map(z -> Zone.builder()
+                            .name(z.getName())
+                            .enabled(z.isEnabled())
+                            .points(z.getPoints())
+                            .camera(camera)
+                            .build())
+                    .forEach(camera.getZones()::add);
+        }
         CCTVCameraInfo saved = cameraInfoRepository.save(camera);
 
-        // publish event
-        ZoneUpdateEvent event = ZoneUpdateEvent.builder()
+        // publish event — dùng DTO tránh circular reference khi serialize
+        List<ZoneUpdateEvent.ZoneDto> zoneDtos = camera.getZones().stream()
+                .map(z -> ZoneUpdateEvent.ZoneDto.builder()
+                        .name(z.getName())
+                        .enabled(z.isEnabled())
+                        .points(z.getPoints())
+                        .build())
+                .collect(Collectors.toList());
+
+        modifyCCTVPublisher.publish(ZoneUpdateEvent.builder()
                 .cameraId(camera.getId())
-                .zones(camera.getZones())
-                .build();
-        modifyCCTVPublisher.publish(event);
+                .zones(zoneDtos)
+                .build());
 
         return CCTVInfoMapper.toResponse(saved);
     }
@@ -178,6 +184,7 @@ public class CCTVService implements ICCTVService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CCTVRes getCCTVCameraInfoById(String id) {
         CCTVCameraInfo camera = cameraInfoRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
@@ -193,6 +200,7 @@ public class CCTVService implements ICCTVService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CCTVRes> getAllCameras() {
         return cameraInfoRepository.findAll()
                 .stream()

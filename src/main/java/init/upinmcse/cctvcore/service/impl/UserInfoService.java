@@ -33,8 +33,6 @@ public class UserInfoService implements IUserService {
                     .toList();
         }
 
-        log.info("getProfile userId={}", userId);
-
         return CCTVUserInfoRes.builder()
                 .userId(userId)
                 .email(email)

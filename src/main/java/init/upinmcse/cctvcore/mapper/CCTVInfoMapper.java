@@ -7,54 +7,22 @@ import init.upinmcse.cctvcore.dto.response.LocationDetailRes;
 import init.upinmcse.cctvcore.model.CCTVCameraInfo;
 import init.upinmcse.cctvcore.model.LocationDetail;
 import org.mapstruct.*;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
-@Mapper(componentModel = "spring", 
+@Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CCTVInfoMapper {
 
-    @Mapping(target = "location", source = ".", qualifiedByName = "toGeoJsonPoint")
+    @Mapping(target = "status", expression = "java(init.upinmcse.cctvcore.model.enums.CCTVStatus.OK)")
     CCTVCameraInfo toEntity(AddCCTVReq request);
 
-    @Mapping(target = "location", source = ".", qualifiedByName = "toGeoJsonPoint")
+    // zones must be updated via updateCCTVZone(), not here — Zone needs camera reference set manually
+    @Mapping(target = "zones", ignore = true)
     void updateEntity(@MappingTarget CCTVCameraInfo entity, UpdateCCTVReq request);
 
-    @Mapping(target = "longitude", source = "location", qualifiedByName = "toLongitude")
-    @Mapping(target = "latitude", source = "location", qualifiedByName = "toLatitude")
     @Mapping(target = "status", expression = "java(entity.getStatus() != null ? entity.getStatus().name() : null)")
     @Mapping(target = "mode", expression = "java(entity.getMode() != null ? entity.getMode().name() : null)")
     CCTVRes toResponse(CCTVCameraInfo entity);
 
     LocationDetailRes toLocationResponse(LocationDetail detail);
-
-    // ===== CUSTOM MAPPERS FOR GEOJSON =====
-    @Named("toGeoJsonPoint")
-    default GeoJsonPoint toGeoJsonPoint(Object request) {
-        Double lon = null;
-        Double lat = null;
-        
-        if (request instanceof AddCCTVReq req) {
-            lon = req.getLongitude();
-            lat = req.getLatitude();
-        } else if (request instanceof UpdateCCTVReq req) {
-            lon = req.getLongitude();
-            lat = req.getLatitude();
-        }
-
-        if (lon != null && lat != null) {
-            return new GeoJsonPoint(lon, lat);
-        }
-        return null;
-    }
-
-    @Named("toLongitude")
-    default Double toLongitude(GeoJsonPoint point) {
-        return point != null ? point.getX() : null;
-    }
-
-    @Named("toLatitude")
-    default Double toLatitude(GeoJsonPoint point) {
-        return point != null ? point.getY() : null;
-    }
 }

@@ -7,7 +7,7 @@ import init.upinmcse.cctvcore.dto.event.NotificationPayload;
 import init.upinmcse.cctvcore.event.producer.INotificationDispatchPublisher;
 import init.upinmcse.cctvcore.model.Notification;
 import init.upinmcse.cctvcore.repository.NotificationRepository;
-import init.upinmcse.cctvcore.service.INotificationPreferenceService;
+import init.upinmcse.cctvcore.service.ISubscriberService;
 import init.upinmcse.cctvcore.service.IStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class IntrusionEventProcessor {
     private final SimpMessagingTemplate messagingTemplate;
     private final NotificationRepository notificationRepository;
     private final IStorageService storageService;
-    private final INotificationPreferenceService preferenceService;
+    private final ISubscriberService subscriberService;
     private final INotificationDispatchPublisher notificationPublisher;
 
     private static final String WS_TOPIC = "/topic/intrusion-alerts";
@@ -80,7 +80,7 @@ public class IntrusionEventProcessor {
 
         // ═══ NOTIFICATION DISPATCH — non-critical, isolated ═══
         try {
-            List<RecipientInfo> recipients = preferenceService.resolveRecipients(event);
+            List<RecipientInfo> recipients = subscriberService.resolveRecipients(event);
             if (!recipients.isEmpty()) {
                 notificationPublisher.publish(buildDispatchEvent(saved, imageUrl, recipients));
                 log.debug("Dispatched notification to {} recipient(s)", recipients.size());

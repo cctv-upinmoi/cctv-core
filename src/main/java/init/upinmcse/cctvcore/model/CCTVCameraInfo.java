@@ -2,62 +2,64 @@ package init.upinmcse.cctvcore.model;
 
 import init.upinmcse.cctvcore.model.enums.CCTVStatus;
 import init.upinmcse.cctvcore.model.enums.Mode;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
-import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "CCTVCameraInfo")
+@Entity
+@Table(name = "cameras")
 public class CCTVCameraInfo extends BaseEntity {
-    @MongoId
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Field("CAMERA_ID")
-    private Long indexId;
-
-    @Field("NAME")
+    @Column(name = "name")
     private String name;
 
-    @Field("IP")
+    @Column(name = "ip")
     private String ip;
 
-    @Field("PORT")
+    @Column(name = "port")
     private Integer port;
 
     @NotNull
-    @Field("USERNAME")
+    @Column(name = "username")
     private String username;
 
-    @Field("PWD")
+    @Column(name = "pwd")
     private String pwd;
 
-    @Field("STATUS")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private CCTVStatus status;
 
     @NotNull
-    @Field("MODE")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mode", nullable = false)
     private Mode mode;
 
-    @Field("RTSP_STREAM_URL")
+    @Column(name = "rtsp_stream_url")
     private String rtspStreamUrl;
 
-    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
-    @Field("LOCATION")
-    private GeoJsonPoint location;
+    @Column(name = "longitude")
+    private Double longitude;
 
-    @Field("LOCATION_DETAIL")
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Embedded
     private LocationDetail locationDetail;
 
-    @Field("ZONES")
-    private List<Zone> zones;
+    @Builder.Default
+    @OneToMany(mappedBy = "camera", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Zone> zones = new ArrayList<>();
 }
