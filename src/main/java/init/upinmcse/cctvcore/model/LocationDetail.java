@@ -1,27 +1,29 @@
 package init.upinmcse.cctvcore.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Embeddable
 public class LocationDetail {
 
-    @Field("ADDRESS")
+    @Column(name = "address")
     private String address;
 
-    @Field("WARD")
+    @Column(name = "ward")
     private String ward;
 
-    @Field("DISTRICT")
+    @Column(name = "district")
     private String district;
 
-    @Field("PROVINCE")
+    @Column(name = "province")
     private String province;
 
-    @Field("DESCRIPTION")
+    @Column(name = "description")
     private String description;
 }

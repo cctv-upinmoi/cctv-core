@@ -21,7 +21,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public Page<NotificationRes> getNotifications(int page, int size, Boolean read) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "created_at"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         Page<Notification> notifications = (read == null)
                 ? notificationRepository.findAll(pageable)

@@ -22,7 +22,9 @@ public enum ErrorCode {
 
     INVALID_FILE(3000, "error.csv-failed", HttpStatus.BAD_REQUEST),
 
-    NOTIFICATION_NOT_FOUND(4001, "error.notification-not-found", HttpStatus.NOT_FOUND)
+    NOTIFICATION_NOT_FOUND(4001, "error.notification-not-found", HttpStatus.NOT_FOUND),
+
+    JOB_NOT_FOUND(5001, "error.job-not-found", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String messageKey, HttpStatusCode statusCode) {

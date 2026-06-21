@@ -1,8 +1,10 @@
 package init.upinmcse.cctvcore.model;
 
 import init.upinmcse.cctvcore.model.enums.ZoneType;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
@@ -11,32 +13,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = "camera")
+@EqualsAndHashCode(exclude = "camera")
+@Entity
+@Table(name = "zones")
 public class Zone {
 
-    /**
-     * Zone name, ex: "Zone A", "Khu vực cửa chính"
-     */
-    @Field("NAME")
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "camera_id", nullable = false)
+    private CCTVCameraInfo camera;
+
+    @Column(name = "name")
     private String name;
 
-    /**
-     * Zone type: INTRUSION, LOITERING, LINE_CROSSING...
-     */
-    @Field("TYPE")
-    private ZoneType type;
-
-    /**
-     * En/disable zone
-     */
-    @Field("ENABLED")
+    @Column(name = "enabled")
     private boolean enabled;
 
-    /**
-     * Danh sách các điểm tạo thành polygon của zone.
-     * Mỗi điểm là [x, y] với giá trị normalized 0.0 - 1.0
-     * tính theo tỷ lệ chiều rộng/chiều cao của frame camera.
-     * Ví dụ: [[0.1, 0.1], [0.9, 0.1], [0.9, 0.9], [0.1, 0.9]]
-     */
-    @Field("POINTS")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "points", columnDefinition = "jsonb")
     private List<double[]> points;
 }

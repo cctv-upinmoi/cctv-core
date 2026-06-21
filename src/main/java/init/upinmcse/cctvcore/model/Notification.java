@@ -1,9 +1,7 @@
 package init.upinmcse.cctvcore.model;
 
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 
@@ -12,40 +10,42 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "CCTVNotification")
+@Entity
+@Table(name = "notifications")
 public class Notification extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Field("camera_id")
+    @Column(name = "camera_id")
     private String cameraId;
 
-    @Field("camera_name")
+    @Column(name = "camera_name")
     private String cameraName;
 
-    @Field("zone_name")
+    @Column(name = "zone_name")
     private String zoneName;
 
-    @Field("confidence")
+    @Column(name = "confidence")
     private Double confidence;
 
-    @Field("detected_at")
+    @Column(name = "detected_at")
     private Instant detectedAt;
 
-    @Field("image_url")
+    @Column(name = "image_url")
     private String imageUrl;
 
-    @Field("alert_type")
+    @Column(name = "alert_type")
     private String alertType;
 
-    @Field("person_count")
+    @Column(name = "person_count")
     private Integer personCount;
 
-    @Field("event_id")
+    @Column(name = "event_id", unique = true)
     private String eventId;
 
     @Builder.Default
-    @Field("read")
+    @Column(name = "read")
     private boolean read = false;
 }

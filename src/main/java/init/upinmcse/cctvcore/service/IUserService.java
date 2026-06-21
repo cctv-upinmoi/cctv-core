@@ -1,9 +1,8 @@
 package init.upinmcse.cctvcore.service;
 
-import init.upinmcse.cctvcore.dto.request.RegistrationReq;
 import init.upinmcse.cctvcore.dto.response.CCTVUserInfoRes;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public interface IUserService {
-    CCTVUserInfoRes register(RegistrationReq request);
-    CCTVUserInfoRes getProfile();
+    CCTVUserInfoRes getProfile(Jwt jwt);
 }
