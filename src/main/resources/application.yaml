@@ -40,6 +40,16 @@ kafka:
     modify-cctv: '${KAFKA_TOPIC_MODIFY:modify-zone-cctv}'
     notification-dispatch: '${KAFKA_TOPIC_NOTIFICATION:notification-dispatch}'
 
+outbox:
+  relay:
+    poll-interval-ms: '${OUTBOX_POLL_INTERVAL_MS:2000}'   # chu kỳ relay quét event PENDING
+    batch-size: '${OUTBOX_BATCH_SIZE:100}'                # số event xử lý mỗi lượt
+    max-retries: '${OUTBOX_MAX_RETRIES:10}'               # quá ngưỡng -> đánh dấu FAILED
+  cleanup:
+    enabled: '${OUTBOX_CLEANUP_ENABLED:true}'
+    retention-hours: '${OUTBOX_RETENTION_HOURS:168}'      # xóa event PUBLISHED cũ hơn (mặc định 7 ngày)
+    interval-ms: '${OUTBOX_CLEANUP_INTERVAL_MS:3600000}'  # chu kỳ dọn dẹp (mặc định 1 giờ)
+
 idp:
   realm: '${KC_REALM:smart-cctv}'
   url: '${KC_URL:http://localhost:8081}'
