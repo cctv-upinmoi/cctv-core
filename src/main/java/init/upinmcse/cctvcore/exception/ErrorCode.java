@@ -19,12 +19,15 @@ public enum ErrorCode {
 
     CAMERA_NOT_FOUND(2001, "error.camera-not-found", HttpStatus.NOT_FOUND),
     INVALID_CAMERA_STATUS(2002, "error.invalid-camera-status", HttpStatus.BAD_REQUEST),
+    ZONE_NOT_FOUND(2003, "error.zone-not-found", HttpStatus.NOT_FOUND),
 
     INVALID_FILE(3000, "error.csv-failed", HttpStatus.BAD_REQUEST),
 
     NOTIFICATION_NOT_FOUND(4001, "error.notification-not-found", HttpStatus.NOT_FOUND),
 
-    JOB_NOT_FOUND(5001, "error.job-not-found", HttpStatus.NOT_FOUND)
+    JOB_NOT_FOUND(5001, "error.job-not-found", HttpStatus.NOT_FOUND),
+
+    OUTBOX_SERIALIZATION_FAILED(6001, "error.outbox-serialization-failed", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
 
     ErrorCode(int code, String messageKey, HttpStatusCode statusCode) {

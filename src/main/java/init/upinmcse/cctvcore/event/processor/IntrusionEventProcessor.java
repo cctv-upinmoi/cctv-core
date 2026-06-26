@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +36,13 @@ public class IntrusionEventProcessor {
             .ofPattern("yyyyMMdd_HHmmss")
             .withZone(ZoneOffset.UTC);
 
+    /**
+     * Chạy trong một transaction để Notification và bản ghi outbox (notification-dispatch)
+     * được commit ATOMIC — nếu alert đã lưu thì dispatch chắc chắn sẽ được gửi (qua
+     * {@code OutboxRelay}). Khối dispatch bắt exception nội bộ nên lỗi resolve recipient
+     * không làm rollback việc lưu Notification.
+     */
+    @Transactional
     public void process(IntrusionEvent event) {
         Notification saved;
         String imageUrl;

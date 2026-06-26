@@ -83,6 +83,43 @@ public class CCTVService implements ICCTVService {
 
     @Override
     @Transactional
+    public CCTVRes toggleZoneEnabled(String cameraId, String zoneId, boolean enabled) {
+        CCTVCameraInfo camera = cameraInfoRepository.findById(cameraId)
+                .orElseThrow(() -> new AppException(ErrorCode.CAMERA_NOT_FOUND));
+
+        Zone zone = camera.getZones().stream()
+                .filter(z -> zoneId.equals(z.getId()))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.ZONE_NOT_FOUND));
+
+        if (zone.isEnabled() == enabled) {
+            // không đổi trạng thái thực tế → không cần publish, tránh event thừa
+            return CCTVInfoMapper.toResponse(camera);
+        }
+
+        zone.setEnabled(enabled);
+        CCTVCameraInfo saved = cameraInfoRepository.save(camera);
+
+        // Gửi snapshot toàn bộ zones như endpoint replace-all để consumer (AI service)
+        // không cần đổi logic — vẫn nhận cùng định dạng ZoneUpdateEvent.
+        List<ZoneUpdateEvent.ZoneDto> zoneDtos = saved.getZones().stream()
+                .map(z -> ZoneUpdateEvent.ZoneDto.builder()
+                        .name(z.getName())
+                        .enabled(z.isEnabled())
+                        .points(z.getPoints())
+                        .build())
+                .collect(Collectors.toList());
+
+        modifyCCTVPublisher.publish(ZoneUpdateEvent.builder()
+                .cameraId(saved.getId())
+                .zones(zoneDtos)
+                .build());
+
+        return CCTVInfoMapper.toResponse(saved);
+    }
+
+    @Override
+    @Transactional
     public CCTVRes addCCTVCameraInfo(AddCCTVReq request) {
         CCTVCameraInfo camera = CCTVInfoMapper.toEntity(request);
         camera.setStatus(CCTVStatus.OK);

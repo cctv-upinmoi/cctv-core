@@ -84,6 +84,26 @@ public class KafkaConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
+    /**
+     * Producer gửi payload đã được serialize sẵn sang JSON (raw string) — dùng bởi
+     * {@code OutboxRelay}. Phải dùng StringSerializer (không phải JsonSerializer) để
+     * tránh serialize lần hai (sẽ bọc chuỗi trong dấu nháy). Kết quả bytes trên wire
+     * trùng với producer JsonSerializer cũ → consumer không cần đổi.
+     */
+    @Bean
+    public ProducerFactory<String, String> stringProducerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> stringKafkaTemplate() {
+        return new KafkaTemplate<>(stringProducerFactory());
+    }
+
     // ── Topics (auto-create nếu chưa tồn tại) ────────────────────────────────
 
     @Bean

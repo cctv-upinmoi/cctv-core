@@ -6,6 +6,7 @@ import init.upinmcse.cctvcore.security.ConfiguratorAccess;
 import init.upinmcse.cctvcore.dto.event.CCTVStatusEvent;
 import init.upinmcse.cctvcore.dto.request.AddCCTVReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVReq;
+import init.upinmcse.cctvcore.dto.request.ToggleZoneEnabledReq;
 import init.upinmcse.cctvcore.dto.request.UpdateCCTVZoneReq;
 import init.upinmcse.cctvcore.dto.response.CCTVRes;
 import init.upinmcse.cctvcore.dto.response.ImportCCTVResult;
@@ -107,7 +108,7 @@ public class CctvController {
             @ApiResponse(responseCode = "404", description = "Camera not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @AdminAccess
+    @ConfiguratorAccess
     @DeleteMapping("/{id}")
     public AppResponse<Void> deleteCCTV(
             @Parameter(description = "Camera ID to delete", required = true) @PathVariable String id) {
@@ -141,11 +142,32 @@ public class CctvController {
             @ApiResponse(responseCode = "404", description = "Camera not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @AdminAccess
+    @ConfiguratorAccess
     @PatchMapping("/update-zone")
     public AppResponse<CCTVRes> updateCCTVZone(@Valid @RequestBody UpdateCCTVZoneReq updateCCTVZoneReq){
         return AppResponse.<CCTVRes>builder()
                 .data(cctvService.updateCCTVZone(updateCCTVZoneReq))
+                .build();
+    }
+
+    @Operation(summary = "Toggle a single zone enabled state",
+            description = "Enable or disable one zone of a camera without sending the whole zone list. Requires Configurator role.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Zone toggled successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AppResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Camera or zone not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @ConfiguratorAccess
+    @PatchMapping("/{cameraId}/zones/{zoneId}/enabled")
+    public AppResponse<CCTVRes> toggleZoneEnabled(
+            @Parameter(description = "Camera ID", required = true) @PathVariable String cameraId,
+            @Parameter(description = "Zone ID", required = true) @PathVariable String zoneId,
+            @Valid @RequestBody ToggleZoneEnabledReq req) {
+        return AppResponse.<CCTVRes>builder()
+                .data(cctvService.toggleZoneEnabled(cameraId, zoneId, req.getEnabled()))
                 .build();
     }
 
