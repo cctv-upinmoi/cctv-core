@@ -1,29 +1,36 @@
 package init.upinmcse.cctvcore.event.producer;
 
 import init.upinmcse.cctvcore.dto.event.NotificationDispatchEvent;
+import init.upinmcse.cctvcore.service.impl.OutboxService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Ghi notification-dispatch event vào outbox (KHÔNG gửi thẳng Kafka). Được gọi trong
+ * {@code @Transactional IntrusionEventProcessor.process}, nên bản ghi outbox commit
+ * atomic cùng Notification; {@code OutboxRelay} publish lên Kafka sau đó.
+ */
 @Component
 @Slf4j
 public class KafkaNotificationDispatchPublisher implements INotificationDispatchPublisher {
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private static final String AGGREGATE_TYPE = "notification";
+
+    private final OutboxService outboxService;
     private final String topic;
 
     public KafkaNotificationDispatchPublisher(
-            KafkaTemplate<String, Object> kafkaTemplate,
+            OutboxService outboxService,
             @Value("${kafka.topics.notification-dispatch}") String topic) {
-        this.kafkaTemplate = kafkaTemplate;
+        this.outboxService = outboxService;
         this.topic = topic;
     }
 
     @Override
     public void publish(NotificationDispatchEvent event) {
-        log.debug("Publishing notification dispatch to Kafka topic={} eventId={} recipients={}",
+        log.debug("Enqueueing notification dispatch to outbox topic={} eventId={} recipients={}",
                 topic, event.getEventId(), event.getRecipients().size());
-        kafkaTemplate.send(topic, event.getEventId(), event);
+        outboxService.publish(topic, AGGREGATE_TYPE, event.getEventId(), event);
     }
 }

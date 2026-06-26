@@ -18,5 +18,6 @@ public interface ICCTVService {
     void deleteCCTVCameraInfoById(String id);
     List<CCTVRes> getAllCameras();
     CCTVRes updateCCTVZone(UpdateCCTVZoneReq updateCCTVZoneReq);
+    CCTVRes toggleZoneEnabled(String cameraId, String zoneId, boolean enabled);
     void updateCameraStatus(String id, CCTVStatus status);
 }
